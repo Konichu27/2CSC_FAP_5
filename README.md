@@ -1,60 +1,35 @@
+Current app outline: [https://docs.google.com/document/d/18OoajFyq06-zGYMo-0F9kE_u8mAGwhU-DcSetZ7g14g/edit](https://docs.google.com/document/d/18OoajFyq06-zGYMo-0F9kE_u8mAGwhU-DcSetZ7g14g/edit)
 
-
-DB will have 3 columns (UserDB, table name: USER_INFO)
- - username
- - password
- - role (guest / admin)
- - provide 20 records, 5 admin and 15 guest roles
-
-Landing Page (login Page - index.jsp)
- - Header 
- - Username and password and a submit button
- - Footer
-
-Success Page (success.jsp)
- - Header 
- - A welcome message stating the user's name and the user's role
- - Logout Button, once clicked must destroy the session and will land back to the login page.
- - Once logout button (or link) was clicked, destroy the session and once the back button in the browser was clicked you should NOT be allowed to go back to the success page.
- - Take note, you have to use Session Management.
- - Footer
-
-Error Page (error_1.jsp, error_2.jsp, error_3.jsp, etc)
- - Header 
- - Error message, why you end up here.
- - link going back to the login page / previous page
- - Footer
-
-SessionDestroyed Error Page (error_session.jsp)
- - Header 
- - Error message once you attempt to go to the successpage without properly logging in.
- - Footer
-
-Login Servlet
- - use the public void init(ServletConfig) {} method to load the DB credentials at start up (DB Name, db username, db password and URL)
- - If the login succeeds, create a session object and proceed to the success page.
- - If the login is unsuccessful, go to the right error page.
- - error_1.jsp (if the username is not in the DB, and password is blank)
- - error_2.jsp (if the username is correct but incorrect password)
- - error_3.jsp (if the username and password are both incorrect, both are not blank) 
- ----> if both username and password is left blank, throw a NullValueException to 
- call another error page, ie: noLoginCredentials.jsp.
- - error_4.jsp (if an error 404 status code is encountered)
-
-Must Have's:
- ServletConfig in your DD where you keep the following:
-  - DB username, DB password, DB driver and URL
-  - ServletContext in your DD where you keep the value for the header and footer
-  - Session Timeout value set to 5 minutes
-  - welcome file set to index.jsp
-
-Additional Pages:
- - Error page declarations. Give at least 5.
- - AuthenticationException for incorrect username / password
- - NullValueException for no username / password
- - Error 404, for incorrect context path
-
-Your Java Web App Project should be: ICS2609_SECTION_LASTNAME1_LASTNAME2_LASTNAME3.
-
-Deadline:
- - Mar 1, 1pm
+# REPORTS (25 points)
+Admin users can print two types of reports: a PDF for ALL records and an option to print only their records.
+You should also have a report that is time-bound.
+For ALL types of PDF reports, the following MUST be included.
+1. The username of the currently logged in user.
+2. The date and time the report was generated.
+3. Pagination of all records for admin users. Incase there are hundreds of record that won't fit in a single page the records must be properly printed to the next page.
+4. The current page / total pages (Page x of y)
+5. All reports must be printed in landscape form. 
+6. Include headers and footers from your web.xml to your PDF output.
+7. For the list of users, provide atleast 50 records so that when the admin prints all of them you will be able to print all the list of users and roles only (DON'T print the passwords). Put an asterisk (*) beside the name of the currently logged in admin account.
+8. The name of the PDF file should be based on the date and time stamp when the report was generated. Example:
+COURSELIST_20240501081012.pdf 
+2024 - year
+05 - May
+01 - May 1
+08 - 8am
+10 - 8:10am
+12 - 8:10:12am
+9. Be sure that the JSP will have a download link (or button) and should be downloaded on the client side and NOT the server side.
+# MULTIPLE DBMS (25 pts)
+1. Maintain the current table your using for MP2 up to MP4. Provide another DBMS, and the context where you'll use it. Be sure that there will also be report generation on it.
+2. The second table should be accessible only if the user is successfully logged in.
+3. Store the sensitive data needed in the DD.
+# UI / UX (10 pts)
+Be sure you've created a responsive web app.
+# BE A GOOD SYSTEMS ANALYST (SA) - What is the CONTEXT of your APP (10 pts)
+# USEABILITY  (10 pts)
+ - No errors, no bugs, with customized error pages.
+ - Exceptions should be caught (dates)
+# PRESENTATION (20 pts) 
+ - Prepare a video presentation that will be played in class. 5 to 10 mins. 
+ - Q and A 10 mins
