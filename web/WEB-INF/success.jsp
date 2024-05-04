@@ -163,7 +163,6 @@
         response.setDateHeader("Expires",-1);
         %>
         <body style="display:flex; align-items:center; justify-content:center;">
-        <jsp:include page="/WEB-INF/header.jsp"/> 
             <div class="container">
                 <div class="form">
                     <div class="CONTENT">
@@ -189,6 +188,4 @@
         </body>
 
         <br>
-        <jsp:include page="/WEB-INF/footer.jsp"/> 
-
         </html>

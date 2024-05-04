@@ -1,29 +1,16 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <style>
-            @import url(https://fonts.googleapis.com/css?family=Poppins:300);
-
-            .header {
-                color: white;
-                text-align: center;
-                padding: 40px;
-                font-size: 15px;
-                z-index: 999;
-                font-family: Poppins;
-                line-height: 1em
-            }
-
-            .header p {
-                margin-bottom: 10px;
-            }
-        </style>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--<style><%@include file="/WEB-INF/css/header.css"%></style>-->
     </head>
     <body>
-        <header class="header">
-            <p><% out.print(getServletContext().getInitParameter("Subject")); %></p>    
-            <p><% out.print(getServletContext().getInitParameter("Section")); %></p>   
-            <p><% out.print(getServletContext().getInitParameter("Name"));%></p>
-        </header> 
+        <header>
+            <div class="container">
+                <img id="logo" src="ActiveLearningLogo.png" alt="Active Learning Logo">
+            </div>
+        </header>
     </body>
 </html>

@@ -101,6 +101,8 @@ public class LoginServlet extends HttpServlet
             // If you need to check the validation code, also consider login.jsp & CaptchaServlet.
 
                 try {
+                    // The Account object is where data for the username and password is passed.
+                    // See init() to see what loginRequest does, but in summary, lr is a LoginRequest object for verifying login details.
                     Account acc = lr.loginRequest(uname, pword);
                     HttpSession session = request.getSession();
                     // request.setAttribute("uname", uname);
@@ -138,10 +140,6 @@ public class LoginServlet extends HttpServlet
                     response.sendRedirect("error_con.jsp");
                     sae.printStackTrace();
                 }
-            // TODO: REMOVE COMMENT ONCE PAGES (login.jsp w/ CAPTCHA validation, error_captcha.jsp) ARE CREATED
-            /*else {
-                response.sendRedirect("error_captcha.jsp");
-            }*/
         }
         else {
             response.sendRedirect("error_srv.jsp");

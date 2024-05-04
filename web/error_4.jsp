@@ -184,7 +184,6 @@
 </head>
 
 <body style="display:flex; align-items:center; justify-content:center;">
-    <jsp:include page="/WEB-INF/header.jsp"/> 
     <!--<img src="ERRobot.png" alt="Sad Robot 3d" class="robot">-->
     <div class="container">
         <div class="form">
@@ -192,13 +191,12 @@
                 <p>404</p>
                 <h2>Page not found.</h2>
             </div>
-            <a href="/ICS2609_2CSC_DAYAO_ESGUERRA_GULIFARDO/index.jsp">
+            <a href="index.jsp">
                 <input class="btn" type="submit" id="submit" value="Return">
             </a>
         </div>
     </div>
     <br>
-    <jsp:include page="/WEB-INF/footer.jsp"/> 
 </body>
 
 </html>

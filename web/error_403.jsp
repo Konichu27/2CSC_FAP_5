@@ -184,7 +184,6 @@
 </head>
 
 <body style="display:flex; align-items:center; justify-content:center;">
-    <jsp:include page="/WEB-INF/header.jsp"/> 
     <!--<img src="ERRobot.png" alt="Sad Robot 3d" class="robot">-->
     <div class="container">
         <div class="form">
@@ -198,7 +197,6 @@
         </div>
     </div>
     <br>
-    <jsp:include page="/WEB-INF/footer.jsp"/> 
 </body>
 
 </html>

@@ -199,7 +199,6 @@
     session.invalidate();
     %>
     <body style="display:flex; align-items:center; justify-content:center;">
-        <jsp:include page="/WEB-INF/header.jsp"/> 
         <div class="login-page">
             <div class="form">
             <form action="login" method="POST">
@@ -212,6 +211,5 @@
           </div>
         </div>
         <br>
-        <jsp:include page="/WEB-INF/footer.jsp"/> 
     </body>
 </html>
