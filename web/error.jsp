@@ -14,7 +14,7 @@
         <div class="wrapper">
             <div id="content">
                 <h1>OOPS!</h1>
-                <p>ERROR 404: Page Not Found</p>
+                <p><%= request.getSession().getAttribute("error_message") %></p>
                 <div class="forms">
                     <form class="form">
                         <a href="index.jsp">

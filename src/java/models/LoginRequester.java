@@ -35,10 +35,12 @@ public class LoginRequester
                     }
                     
                     boolean isPwordBlank = (pword == null || pword.isEmpty());
-                    
+                    System.out.println("Raw password: " + pword);
                     String encrypPword;
                     encrypPword = Security.encrypt(pword, key, cipher);
                     encrypPword = Objects.toString(encrypPword, "");
+                    System.out.println("Encrypted password: " + encrypPword);
+                    System.out.println(uname);
                     
                     try (PreparedStatement psAcc = con.prepareStatement("SELECT * FROM USER_INFO WHERE username = ?"))
                     {
@@ -50,6 +52,7 @@ public class LoginRequester
                             { // next() method returns false if no corresp. entry is found.
                                 if (rsAcc.getString("password").equals(encrypPword)) { // PASSWORD CORRECT
                                     return new Account(uname, encrypPword, rsAcc.getString("role"));
+                                    
                                 }
                                 else if (isPwordBlank) {
                                     // ERROR 2: the username is correct but incorrect password
@@ -58,6 +61,8 @@ public class LoginRequester
                                 }
                                 else {
                                     throw new AuthenticationException("2: User " + uname + " requested with an incorrect password.");
+                                
+
                                 }
                             }
                             else if (isPwordBlank) {
@@ -75,5 +80,7 @@ public class LoginRequester
                         // Controller catches ServerAuthenticationException, redirects to error_login-generic.jsp
                         throw new ServerAuthenticationException("7: Connection with user " + uname + " has experienced a problem.");
                     }
+                    
+                    
             }
 }

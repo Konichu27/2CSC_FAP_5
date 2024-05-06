@@ -42,7 +42,8 @@ public class WelcomeServlet extends HttpServlet
             isCaptchaValid = "";
         }
         if (!uname.isEmpty() && !urole.isEmpty() && isCaptchaValid.equals("true")) {
-            RequestDispatcher rs = request.getRequestDispatcher("WEB-INF/success.jsp");
+            // RequestDispatcher rs = request.getRequestDispatcher("WEB-INF/success.jsp");
+            RequestDispatcher rs = request.getRequestDispatcher("WEB-INF/testhome.jsp");
             rs.forward(request, response);
         }
         else {

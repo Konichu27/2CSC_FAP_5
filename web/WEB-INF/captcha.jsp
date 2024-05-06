@@ -13,7 +13,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="Captcha" />
         <title>CAPTCHA</title>
-        <style><%@include file="/WEB-INF/css/signtest.css"%></style>
+        <style><%@include file="/WEB-INF/css/styles.css"%></style>
         <script>
             // para hindi macopy
             function preventCopy(event) {

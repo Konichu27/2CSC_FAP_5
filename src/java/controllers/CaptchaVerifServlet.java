@@ -42,6 +42,7 @@ public class CaptchaVerifServlet extends HttpServlet
         System.out.println(request.getParameter("captchaVerif"));
         if (session.getAttribute("captcha").equals(request.getParameter("captchaVerif"))) {
             session.setAttribute("isCaptchaValid", true);
+   
             response.sendRedirect("success");
         }
         else {

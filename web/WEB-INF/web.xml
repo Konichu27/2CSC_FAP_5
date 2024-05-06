@@ -10,7 +10,16 @@
     </context-param>
     <context-param>
         <param-name>Name</param-name>
-        <param-value>Dayao, Esguerra, Gulifardo</param-value>
+        <param-value>Dayao, Esguerra, Guevarra, Gulifardo, Tuazon</param-value>
+    </context-param>
+                                                <!-- DRIVERS FOR Derby (USER_INFO) -->
+    <context-param>
+        <param-name>driver</param-name>
+        <param-value>org.apache.derby.jdbc.ClientDriver</param-value>
+    </context-param>
+    <context-param>
+        <param-name>url</param-name>
+        <param-value>jdbc:derby://localhost:1527/UserDB</param-value>
     </context-param>
     <context-param>
         <param-name>username</param-name>
@@ -20,6 +29,30 @@
         <param-name>password</param-name>
         <param-value>app</param-value>
     </context-param>
+                                                <!-- DRIVERS FOR MySQL (UPLOADED_FILES) -->
+    <context-param>
+        <param-name>driver_mysql</param-name>
+        <param-value>com.mysql.cj.jdbc.Driver</param-value>
+    </context-param>
+    <context-param>
+        <param-name>url_mysql</param-name>
+        <!--
+        // NOTE: For prototyping purposes, SSL is disabled.
+        // The database won't load otherwise due to certificate settings, 
+           which requires GlassFish server edits. If you want to add this, ask in gc
+        // PLEASE DO NOT EVER DO THIS IN REAL LIFE
+        -->
+        <param-value>jdbc:mysql://localhost:3310/file?useSSL=false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>username_mysql</param-name>
+        <param-value>root</param-value>
+    </context-param>
+    <context-param>
+        <param-name>password_mysql</param-name>
+        <param-value>yoshiugly28</param-value>
+    </context-param>
+                                                <!-- PASSWORD ENCRYPTION SPECIFICATIONS -->
     <context-param>
         <param-name>key</param-name>
         <param-value>2CSCMP3GR0UP10 ?</param-value>
@@ -28,19 +61,13 @@
         <param-name>cipher</param-name>
         <param-value>AES/ECB/PKCS5Padding</param-value>
     </context-param>
-    <context-param>
-        <param-name>driver</param-name>
-        <param-value>org.apache.derby.jdbc.ClientDriver</param-value>
-    </context-param>
-    <context-param>
-        <param-name>url</param-name>
-        <param-value>jdbc:derby://localhost:1527/UserDB</param-value>
-    </context-param>
+                                                <!-- LISTENERS -->
     <listener>
         <listener-class>
             controllers.DateContextListener
         </listener-class>
     </listener>
+                                                <!-- SERVLET MAPPING -->
     <servlet>
         <servlet-name>LogoutServlet</servlet-name>
         <servlet-class>controllers.LogoutServlet</servlet-class>
@@ -75,7 +102,14 @@
         <servlet-name>CaptchaVerifServlet</servlet-name>
         <servlet-class>controllers.CaptchaVerifServlet</servlet-class>
     </servlet>
-    <!-- Servlet Mapping-->
+    <servlet>
+        <servlet-name>UploadServlet</servlet-name>
+        <servlet-class>controllers.UploadServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FileServlet</servlet-name>
+        <servlet-class>controllers.FileServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/logout</url-pattern>
@@ -95,6 +129,14 @@
     <servlet-mapping>
         <servlet-name>CaptchaVerifServlet</servlet-name>
         <url-pattern>/captchaVerif</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UploadServlet</servlet-name>
+        <url-pattern>/uploads</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FileServlet</servlet-name>
+        <url-pattern>/files</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

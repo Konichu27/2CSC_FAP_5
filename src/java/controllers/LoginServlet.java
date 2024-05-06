@@ -115,34 +115,50 @@ public class LoginServlet extends HttpServlet
                     ae.printStackTrace();
                     switch (ae.getMessage().charAt(0)) {
                         case '1':
-                            response.sendRedirect("error_1.jsp");
+                            String error1 = "Username is invalid. Password is blank.";
+                            request.getSession().setAttribute("error_message", error1);
+                            response.sendRedirect("error.jsp");
                             break;
                         case '2':
-                            response.sendRedirect("error_2.jsp");
+                            String error2 = "Password is invalid.";
+                            request.getSession().setAttribute("error_message", error2);
+                            response.sendRedirect("error.jsp");
                             break;
                         case '3':
-                            response.sendRedirect("error_3.jsp");
+                            String error3 = "Username and password are both invalid.";
+                            request.getSession().setAttribute("error_message", error3);
+                            response.sendRedirect("error.jsp");
                             break;
                         // Error 4 reserved for 404s; already handled by web.xml
                         case '5':
-                            response.sendRedirect("error_5.jsp");
+                            String error5 = "Username is correct, but the password is blank.";
+                            request.getSession().setAttribute("error_message", error5);
+                            response.sendRedirect("error.jsp");
                             break;
                         default:
-                            response.sendRedirect("error_gen.jsp");
+                            String def = "There was an unspecific problem with the login request. Please try again.";
+                            request.getSession().setAttribute("error_message", def);
+                            response.sendRedirect("error.jsp");
                             break;
                     }
                 }
                 catch (NullValueException nve) {
-                    response.sendRedirect("noLoginCredentials.jsp");
+                    String errorLogin = "Please enter proper login credentials!";
+                    request.getSession().setAttribute("error_message", errorLogin);
+                    response.sendRedirect("error.jsp");
                     nve.printStackTrace();
                 }
                 catch (ServerAuthenticationException sae) {
-                    response.sendRedirect("error_con.jsp");
+                    String con = "There was a problem with the server. Please try again, or contact the administrator if the problem persists.";
+                    request.getSession().setAttribute("error_message", con);
+                    response.sendRedirect("error.jsp");
                     sae.printStackTrace();
                 }
         }
         else {
-            response.sendRedirect("error_srv.jsp");
+            String errorSrv = "There seems to be a problem with the server!";
+            request.getSession().setAttribute("error_message", errorSrv);
+            response.sendRedirect("error.jsp");
         }
         //  if login has data
         //      forward to other servlet

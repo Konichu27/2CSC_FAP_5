@@ -50,7 +50,7 @@ public class AdminReport {
             table.addCell(new Phrase("Role", tableHeaderFont));
             
             // Retrieve passwordEntry
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM USER_INFO");
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM APP.USER_INFO");
             try (ResultSet rs = ps.executeQuery())
             {
                 int i = 1;
