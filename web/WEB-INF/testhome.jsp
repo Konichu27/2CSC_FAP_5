@@ -21,7 +21,11 @@
     <ul>
         <% 
             try {
-                List<UploadedFile> uploadedFiles = FileDao.getUploadedFiles();
+                String dbDriver = getServletContext().getInitParameter("driver_mysql");
+                String dbURL = getServletContext().getInitParameter("url_mysql"); // Updated database name
+                String user = getServletContext().getInitParameter("username_mysql");
+                String pass = getServletContext().getInitParameter("password_mysql");
+                List<UploadedFile> uploadedFiles = FileDao.getUploadedFiles(dbDriver, dbURL, user, pass);
                 for (UploadedFile file : uploadedFiles) {
                 String fileName = file.getFileName();
                 int fileId = file.getFileId();                                       %>
