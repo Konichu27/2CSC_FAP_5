@@ -16,7 +16,7 @@ public class FileDao {
         List<UploadedFile> files = new ArrayList<>();
         String sql = "SELECT file_id, file_name FROM uploaded_files";
         
-        try (Connection conn = generateConnection(dbDriver, dbURL, user, pass);
+        try (Connection conn = generateConnection(dbDriver,dbURL, user, pass);
             PreparedStatement pstmt = conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
