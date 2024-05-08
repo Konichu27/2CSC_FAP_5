@@ -1,0 +1,21 @@
+CREATE DATABASE file;
+USE file;
+
+CREATE TABLE applicant (
+    email VARCHAR(255) PRIMARY KEY,
+    salutations VARCHAR(25) NOT NULL,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    app_role VARCHAR(100) NOT NULL,
+    mobile_number VARCHAR(20) NOT NULL,
+    landline_number VARCHAR(20),
+    archive TINYINT(0) NOT NULL  --TINYINT(1) = TRUE AND 0 WOULD MEAN FALSE DEFAULT AS 0
+);
+CREATE TABLE uploaded_files (
+    file_id INT AUTO_INCREMENT PRIMARY KEY,
+    file_name VARCHAR(255),
+    file_path VARCHAR(255),
+    uploader VARCHAR(255),
+    upload_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (uploader) REFERENCES applicant(email)
+);
