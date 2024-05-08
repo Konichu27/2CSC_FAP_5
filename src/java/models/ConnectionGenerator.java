@@ -9,12 +9,14 @@ import java.sql.SQLException;
  */
 public class ConnectionGenerator
 {
-    public static Connection generateConnection(String driver, String url, String username, String password) throws ClassNotFoundException, SQLException {
-        Class.forName(driver);
-        System.out.println("Loaded Driver: " + driver);
-        // Establish Connection
-        Connection con = DriverManager.getConnection(url, username, password);
-        System.out.println("Connected to: " + url);
+    public static Connection generateConnection(String driver_mysql, String url_mysql, String username_mysql, String password_mysql) throws ClassNotFoundException, SQLException {
+        // Explicitly loading the MySQL JDBC driver
+            Class.forName(driver_mysql);
+        System.out.println("Driver loaded successfully.");
+
+        System.out.println("Connecting to database: " + url_mysql);
+        Connection con = DriverManager.getConnection(url_mysql, username_mysql, password_mysql);
+        System.out.println("Connection established.");
         return con;
     }
 }
