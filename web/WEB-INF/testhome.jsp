@@ -20,22 +20,27 @@
     <h2>Download Uploaded Files</h2>
     <ul>
         <% 
+            String dbDriver = getServletContext().getInitParameter("driver_mysql");
+            String dbURL = getServletContext().getInitParameter("url_mysql");
+            String user = getServletContext().getInitParameter("username_mysql");
+            String pass = getServletContext().getInitParameter("password_mysql");
             try {
-                String dbDriver = getServletContext().getInitParameter("driver_mysql");
-                String dbURL = getServletContext().getInitParameter("url_mysql"); // Updated database name
-                String user = getServletContext().getInitParameter("username_mysql");
-                String pass = getServletContext().getInitParameter("password_mysql");
                 List<UploadedFile> uploadedFiles = FileDao.getUploadedFiles(dbDriver, dbURL, user, pass);
-                for (UploadedFile file : uploadedFiles) {
-                String fileName = file.getFileName();
-                int fileId = file.getFileId();                                       %>
-                <li><a href="files?fileId=<%= fileId %>"><%= fileName %></a></li>
-            <%  }
+                if (uploadedFiles.isEmpty()) {
+                    out.println("<li>No files available for download.</li>");
+                } else {
+                    for (UploadedFile file : uploadedFiles) {
+                        String fileName = file.getFileName();
+                        int fileId = file.getFileId();
+        %>
+                        <li><a href="files?fileId=<%= fileId %>"><%= fileName %></a></li>
+        <%
+                    }
+                }
+            } catch (Exception e) {
+                out.println("<li>Failed to load files. Please check the GlassFish server logs.</li>");
+                e.printStackTrace();
             }
-            catch (Exception e) {
-                e.printStackTrace(); %>
-                Failed to load. Please check the GlassFish server logs.
-            <% }
         %>
     </ul>
 </body>
