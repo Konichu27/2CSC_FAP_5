@@ -31,7 +31,7 @@ public class UploadServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
 
         // Path to save uploaded file
-        final String path = getServletContext().getRealPath(UPLOAD_DIRECTORY);
+        final String path = getServletContext().getRealPath(UPLOAD_DIRECTORY)+"/";
         final Part filePart = request.getPart("file");
         final String fileName = getFileName(filePart);
         final String uploader = request.getParameter("uploader"); // Assuming uploader info is provided in the request
@@ -66,7 +66,7 @@ public class UploadServlet extends HttpServlet {
     }
 
 private void saveFileDetails(String fileName, String filePath, String uploader) throws SQLException, ClassNotFoundException {
-    String sql = "INSERT INTO uploaded_files (file_name, file_path, uploader, upload_date) VALUES (?, ?, ?, CURDATE())"; // Make sure the table name matches your DB
+    String sql = "INSERT INTO uploaded_files (file_name, file_path, uploader, upload_date) VALUES (?, ?, ?, NOW())"; // Make sure the table name matches your DB
     try (Connection conn = generateConnection(dbDriver, dbURL, user, pass);
         PreparedStatement pstmt = conn.prepareStatement(sql)) {
         pstmt.setString(1, fileName);
