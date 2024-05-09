@@ -17,7 +17,7 @@
                 <p>You must be logged in to access this page.</p>
                 <div class="forms">
                     <form class="form">
-                        <a href="index.jsp">
+                        <a href="success">
                             <button type="button" class="btn">Return</button>
                         </a>
                     </form>

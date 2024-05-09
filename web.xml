@@ -10,13 +10,9 @@
     </context-param>
     <context-param>
         <param-name>Name</param-name>
-        <param-value>Group 5</param-value>
+        <param-value>Dayao, Esguerra, Guevarra, Gulifardo, Tuazon</param-value>
     </context-param>
-    <context-param>
-        <param-name>Domain</param-name>
-        <param-value>activelearning.ph</param-value>
-    </context-param>
-    <!-- DRIVERS FOR Derby (USER_INFO) -->
+                                                <!-- DRIVERS FOR Derby (USER_INFO) -->
     <context-param>
         <param-name>driver</param-name>
         <param-value>org.apache.derby.jdbc.ClientDriver</param-value>
@@ -33,7 +29,7 @@
         <param-name>password</param-name>
         <param-value>app</param-value>
     </context-param>
-    <!-- DRIVERS FOR MySQL (UPLOADED_FILES) -->
+                                                <!-- DRIVERS FOR MySQL (UPLOADED_FILES) -->
     <context-param>
         <param-name>driver_mysql</param-name>
         <param-value>com.mysql.cj.jdbc.Driver</param-value>
@@ -46,7 +42,7 @@
            which requires GlassFish server edits. If you want to add this, ask in gc
         // PLEASE DO NOT EVER DO THIS IN REAL LIFE
         -->
-        <param-value>jdbc:mysql://localhost:3310/file?useSSL=false</param-value>
+        <param-value>jdbc:mysql://localhost:3306/file?useSSL=false</param-value>
     </context-param>
     <context-param>
         <param-name>username_mysql</param-name>
@@ -54,9 +50,9 @@
     </context-param>
     <context-param>
         <param-name>password_mysql</param-name>
-        <param-value>11!!qqQQ</param-value>
+        <param-value>yoshiugly28</param-value>
     </context-param>
-    <!-- PASSWORD ENCRYPTION SPECIFICATIONS -->
+                                                <!-- PASSWORD ENCRYPTION SPECIFICATIONS -->
     <context-param>
         <param-name>key</param-name>
         <param-value>2CSCMP3GR0UP10 ?</param-value>
@@ -65,13 +61,13 @@
         <param-name>cipher</param-name>
         <param-value>AES/ECB/PKCS5Padding</param-value>
     </context-param>
-    <!-- LISTENERS -->
+                                                <!-- LISTENERS -->
     <listener>
         <listener-class>
             controllers.DateContextListener
         </listener-class>
     </listener>
-    <!-- SERVLET MAPPING -->
+                                                <!-- SERVLET MAPPING -->
     <servlet>
         <servlet-name>LogoutServlet</servlet-name>
         <servlet-class>controllers.LogoutServlet</servlet-class>
@@ -114,22 +110,10 @@
         <servlet-name>FileServlet</servlet-name>
         <servlet-class>controllers.FileServlet</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>GuestServlet</servlet-name>
-        <servlet-class>controllers.GuestServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>UserServlet</servlet-name>
-        <servlet-class>controllers.UserServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ApplicantServlet</servlet-name>
-        <servlet-class>controllers.ApplicantServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>ArchiveServlet</servlet-name>
-        <servlet-class>controllers.ArchiveServlet</servlet-class>
-    </servlet>
+	<servlet>
+		<servlet-name>UserServlet</servlet-name>
+		<servlet-class>UserServlet</servlet-class>
+	</servlet>
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/logout</url-pattern>
@@ -158,29 +142,16 @@
         <servlet-name>FileServlet</servlet-name>
         <url-pattern>/files</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>GuestServlet</servlet-name>
-        <url-pattern>/submit</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>UserServlet</servlet-name>
-        <url-pattern>/admin/accounts</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ApplicantServlet</servlet-name>
-        <url-pattern>/admin/applicants</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ArchiveServlet</servlet-name>
-        <url-pattern>/archives</url-pattern>
-    </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>UserServlet</servlet-name>
+		<url-pattern>/uServlet</url-pattern>
+	</servlet-mapping>
     <session-config>
         <session-timeout>
             5
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>/success</welcome-file>
         <welcome-file>/index.jsp</welcome-file>
     </welcome-file-list>
     <!-- Error page declarations -->

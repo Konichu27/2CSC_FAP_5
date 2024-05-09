@@ -181,7 +181,10 @@
                     <br>
                     <br>
                     <form action="downloadReport" method="POST">
-                        <input class="btn" type="submit" id="submit" value="Download PDF Report">
+                        <button name="reportType" type="submit" id="reportType" value="full_rec">Full Records</button>
+                        <button name="reportType" type="submit" id="reportType" value="self_rec">Self Record</button>
+                        <!--<input class="btn" type="submit" id="submit" value="Download Report for All Users">-->
+                        <!--<input class="btn" type="submit" id="submit" value="Download Report for Only Your User">-->
                     </form>
                     <form action="logout" method="POST">
                         <input class="btn" type="submit" id="submit" value="Logout">

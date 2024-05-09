@@ -19,22 +19,26 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-public class AdminReport {
-    public static boolean generateReport(OutputStream os, Connection con, String username) {
-        Document document = new Document(PageSize.LETTER);
+public class FullReport {
+    public static void generateReport(OutputStream os, Connection con, String username) throws PdfGenerationException {
+        Document document = new Document(PageSize.LETTER.rotate());
         try {
             PdfWriter writer = PdfWriter.getInstance(document, os);
-            HeaderAndFooter event = new HeaderAndFooter("Administrator", username);
+            HeaderAndFooter event = new HeaderAndFooter("USER_INFO Records", username);
             writer.setPageEvent(event);
 
             document.open();
 
+            /* Header */
             Font reportTypeFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLDITALIC);
             Paragraph reportType = new Paragraph("Admin Report", reportTypeFont);
             reportType.setAlignment(Element.ALIGN_CENTER);
             document.add(reportType);
 
+            /* Table Settings */
             PdfPTable table = new PdfPTable(3);
             table.setWidthPercentage(100);
             table.setSpacingBefore(10f); 
@@ -43,13 +47,14 @@ public class AdminReport {
             float[] columnWidths = {1f,1f, 1f};
             table.setWidths(columnWidths);
             
+            /* Table Header */
             Font tableHeaderFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
 
             table.addCell(new Phrase("#", tableHeaderFont));
             table.addCell(new Phrase("User", tableHeaderFont));
             table.addCell(new Phrase("Role", tableHeaderFont));
             
-            // Retrieve passwordEntry
+            /* Table Contents */
             PreparedStatement ps = con.prepareStatement("SELECT * FROM APP.USER_INFO");
             try (ResultSet rs = ps.executeQuery())
             {
@@ -57,7 +62,14 @@ public class AdminReport {
                 while (rs.next())
                 {
                     table.addCell(i++ + "");
-                    table.addCell(rs.getString("username").trim());
+                    // Font tableUsernameFont = new Font(Font.FontFamily.HELVETICA, 12); 
+                    // Paragraph tableUsername = new Paragraph(rs.getString("username").trim(), reportTypeFont);
+                    String tableUsername = rs.getString("username").trim();
+                    if (tableUsername.equals(username)) {
+                        tableUsername += "*";
+                    }
+                    table.addCell(new Phrase(tableUsername));
+                    
                     table.addCell(rs.getString("role").trim());
                 }
             }
@@ -67,10 +79,8 @@ public class AdminReport {
                 document.newPage();
             }
             document.close();
-            return true;
         } catch (DocumentException | SQLException e) {
-            e.printStackTrace();
-            return false;
+            throw new PdfGenerationException("PDF generation failed. Please check server logs.");
         }
     }
 
@@ -90,9 +100,17 @@ public class AdminReport {
         public void onEndPage(PdfWriter writer, Document document) {
             PdfContentByte cb = writer.getDirectContent();
             String footerContent = "Page " + writer.getPageNumber() + " of 2";
+            
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy - h:mm:ss a"); 
+            String timestamp = LocalDateTime.now().format(formatter); 
+            
+            /* Header */
+            ColumnText.showTextAligned(cb, Element.ALIGN_LEFT, new Phrase("Created " + timestamp, footerFont),
+                                        document.left() + 2, document.top() - 20, 0);
+            
+            /* Footer */
             ColumnText.showTextAligned(cb, Element.ALIGN_RIGHT, new Phrase(footerContent, footerFont),
                                         document.right() - 2, document.bottom() - 20, 0);
-            
             ColumnText.showTextAligned(cb, Element.ALIGN_LEFT, new Phrase(username, footerFont),
                                         document.left() + 2, document.bottom() - 20, 0);
         }

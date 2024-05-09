@@ -17,7 +17,7 @@
                 <p>ERROR 404: Page Not Found</p>
                 <div class="forms">
                     <form class="form">
-                        <a href="index.jsp">
+                        <a href="/2CSC_FAP_5/success">
                             <button type="button" class="btn">Return</button>
                         </a>
                     </form>

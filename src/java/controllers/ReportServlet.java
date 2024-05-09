@@ -321,7 +321,7 @@ public class ReportServlet extends HttpServlet
             catch (Exception e) { 
                 String error = "There was a problem with downloading the PDF file.\nPlease try again.";
                 request.getSession().setAttribute("error_message", error);
-                RequestDispatcher rs = request.getRequestDispatcher("error_admin.jsp");
+                RequestDispatcher rs = request.getRequestDispatcher("error.jsp");
                 rs.forward(request, response);
             }
         }

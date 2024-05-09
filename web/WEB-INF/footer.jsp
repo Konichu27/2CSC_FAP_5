@@ -1,28 +1,39 @@
 <!DOCTYPE html>
 <html>
+
     <head>
-        <style>
-            @import url(https://fonts.googleapis.com/css?family=Poppins:300);
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style>div .footer > * {
+                .footer {
+                    position: fixed;
+                    bottom: 0;
+                    width: 100%;
+                    background-color: #252323 !important;
+                    color:white;
+                    text-align: center;
+                    padding: 5px;
+                    line-height: 0.5em;
+                    border-top: 1px solid white;
+                    font-family: Poppins;
+                    font-size: 1em;
+                    margin-left: -2%;
 
-            .footer {
-                color: white;
-                text-align: center;
-                padding: 50px;
-                font-size: 13px;
-                font-family: Poppins;
-                line-height: 0.5em;
-            }
+                }
 
-            .footer p {
-                margin-bottom: 0;
-            }
-        </style>
+                .footer p {
+                    margin-bottom: 3px;
+                    padding-bottom: 0.5%;
+                }
+            }</style>
     </head>
+
     <body>
         <footer class="footer">
-            <p>Date: <%= getServletContext().getAttribute("currentDate")%></p>
-            <p>Time: <%= getServletContext().getAttribute("currentTime")%></p>
-            <p>Machine Problem IV</p>
+            <p>© Dayao | Esguerra | Guevarra | Gulifardo | Tuazon
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                FAP 2024</p>
         </footer>
+
     </body>
+
 </html>

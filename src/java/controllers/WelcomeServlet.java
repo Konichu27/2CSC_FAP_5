@@ -43,11 +43,22 @@ public class WelcomeServlet extends HttpServlet
         }
         if (!uname.isEmpty() && !urole.isEmpty() && isCaptchaValid.equals("true")) {
             // RequestDispatcher rs = request.getRequestDispatcher("WEB-INF/success.jsp");
-            RequestDispatcher rs = request.getRequestDispatcher("WEB-INF/testhome.jsp");
-            rs.forward(request, response);
+            // RequestDispatcher rs = request.getRequestDispatcher("WEB-INF/testhome.jsp");
+            String redirectedLink = "";
+            if (urole.equals("Admin")) {
+                redirectedLink += "admin/applicants";
+            }
+            else if (urole.equals("Guest")) {
+                // TODO redirect this to guest.jsp or guest-submitted.jsp
+                redirectedLink += "guest.jsp";
+            }
+            else {
+                response.sendRedirect("index.jsp");
+            }
+            response.sendRedirect(redirectedLink);
         }
         else {
-            response.sendRedirect("error_session.jsp");
+            response.sendRedirect("index.jsp");
         }
     }
 

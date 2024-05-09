@@ -17,7 +17,7 @@
                 <p><%= request.getSession().getAttribute("error_message") %></p>
                 <div class="forms">
                     <form class="form">
-                        <a href="success">
+                        <a href="admin.jsp">
                             <button type="button" class="btn">Return</button>
                         </a>
                     </form>

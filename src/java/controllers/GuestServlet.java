@@ -2,26 +2,16 @@ package controllers;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import models.FullReport;
-import models.ConnectionGenerator;
-import models.SelfReport;
 
 /**
  *
  * @author Dayao, Leonne Matthew H. // UST - 1CSC
  */
-@WebServlet(name = "CaptchaVerifServlet", urlPatterns =
-{
-    "/captchaVerif"
-})
-public class CaptchaVerifServlet extends HttpServlet
+public class GuestServlet extends HttpServlet
 {
 
     /**
@@ -36,20 +26,13 @@ public class CaptchaVerifServlet extends HttpServlet
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException
     {
-        HttpSession session = request.getSession();
         response.setContentType("text/html;charset=UTF-8");
-        System.out.println(request.getParameter("captcha"));
-        System.out.println(request.getParameter("captchaVerif"));
-        if (session.getAttribute("captcha").equals(request.getParameter("captchaVerif"))) {
-            session.setAttribute("isCaptchaValid", true);
-   
-            response.sendRedirect("success");
-        }
-        else {
-            String errorSrv = "There seems to be a problem with the server!";
-            request.getSession().setAttribute("error_message", "Please input a valid CAPTCHA.");
-            response.sendRedirect("error.jsp");
-        }
+        // GET
+        // 1. Submit PreparedStatement w/ con for email on APPLICATION.
+        // 2. If exist,
+        //       set path as guest-submitted.jsp
+        // 3. Else set path as guest.jsp
+        // 4. Forward path
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

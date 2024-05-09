@@ -13,7 +13,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="Sign In" />
         <link rel="shortcut icon" href="https://activelearning.ph/wp-content/uploads/2021/03/cropped-favicon-1-192x192.png"/>
-        <style><%@include file="/WEB-INF/css/styles.css"%></style>
+        <style><%@include file="/css/styles.css"%></style>
         <title>Sign In Page</title>
     </head>
     <%  // Removes cache from index.jsp to prevent form resubmission
@@ -35,7 +35,7 @@
     }
     session.invalidate();
     %>
-    <body>
+    <body class = "login-page">
         <jsp:include page="/WEB-INF/header.jsp"/>
         <div class="wrapper">
             <div id="content">
@@ -63,6 +63,6 @@
               </div>
             </div>
           </div>    
-        <%-- <jsp:include page="/WEB-INF/footer.jsp"/> --%>
+        <jsp:include page="/WEB-INF/footer.jsp"/>
     </body>
 </html>

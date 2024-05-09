@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
-        #logo {
+#logo {
             display: inline-block;
             padding-top: 0.3125rem;
             padding-bottom: 0.3125rem;
@@ -99,32 +90,3 @@
             font-weight: 600;
             transition: background-color 0.3s ease;
         }
-        
-
-    </style>
-</head>
-
-<body>
-    <header>
-        <div class="topnav" id="topnav">
-            <a href="#"> <img id="logo" src="ActiveLearningLogo.png"> </a>
-            <nav>
-                <ul>
-                    <%
-                    String isCaptchaValid = "";
-                    try {
-                         isCaptchaValid = session.getAttribute("isCaptchaValid").toString();
-                        }
-                    catch (Exception e) {
-                        isCaptchaValid = "";
-                    }
-                    if (isCaptchaValid.equals("true")) { %>
-                    <li class="btn" id="hover" style="float:right"><a href="#">Sign Out</a></li>
-                    <% }%>
-                </ul>
-            </nav>
-        </div>
-    </header>
-</body>
-
-</html>

@@ -105,26 +105,32 @@
 </head>
 
 <body>
-    <header>
-        <div class="topnav" id="topnav">
-            <a href="#"> <img id="logo" src="ActiveLearningLogo.png"> </a>
-            <nav>
-                <ul>
-                    <%
-                    String isCaptchaValid = "";
-                    try {
-                         isCaptchaValid = session.getAttribute("isCaptchaValid").toString();
-                        }
-                    catch (Exception e) {
-                        isCaptchaValid = "";
-                    }
-                    if (isCaptchaValid.equals("true")) { %>
-                    <li class="btn" id="hover" style="float:right"><a href="#">Sign Out</a></li>
-                    <% }%>
-                </ul>
-            </nav>
+    <div class="topnav" id="myTopnav">
+        <img id="logo" src="https://activelearning.ph/wp-content/uploads/2021/03/logo-white.png"> </a>
+
+        <div id="myLinks" class="myLinks">
+            <a href="#" class="other">Applicants</a>
+            <a href="#" class="other">Accounts</a>
+            <a href="#"class="other">Archives</a>
+            <a href="#" class="btn">Sign Out</a>
         </div>
-    </header>
+        <!-- "Hamburger menu" / "Bar icon" to toggle the navigation links -->
+        <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+            <i class="fa fa-bars"></i>
+        </a>
+    </div>
+
+    <script>
+        function myFunction() {
+            var x = document.getElementById("myLinks");
+            if (x.style.display === "block") {
+                x.style.display = "none";
+            } else {
+                x.style.display = "block";
+            }
+        }
+    </script>
+
 </body>
 
 </html>
