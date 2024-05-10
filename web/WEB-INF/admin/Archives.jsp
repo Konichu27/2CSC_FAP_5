@@ -54,30 +54,33 @@
                         <option>IT Support (Full-Time)</option>
                     </select>
                 </div>
-                <div class="table">
-                    <table id="myTable">
-                        <thead>
-                            <tr>
-                                <th>Archive?</th>
-                                <th>Salutations</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Applied Role</th>
-                                <th>Email</th>
-                                <th>Mobile #</th>
-                                <th>Resume/CV</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <%= request.getAttribute("table") %>
-                            <!-- More rows here -->
-                        </tbody>
-                    </table>
-                </div>
-
+                <form action="/2CSC_FAP_5/files" method="POST">
+                    <div class="table">
+                        <table id="myTable">
+                            <thead>
+                                <tr>
+                                    <th>Archive?</th>
+                                    <th>Salutations</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Applied Role</th>
+                                    <th>Email</th>
+                                    <th>Mobile #</th>
+                                    <th>Resume/CV</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <%= request.getAttribute("table") %>
+                                <!-- More rows here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
                 <div class="reports">
                     <h3>Generate Report:</h3>
-                    <button type="printCurrent" class="btn">Print Current Table</button>
+                    <form action="/2CSC_FAP_5/downloadReport" method="POST">
+                        <button type="submit" id="reportType" name="reportType" class="btn" value="archived_app">Print Full Archived Applicant Table</button>
+                    </form>
                 </div>
             </div>
         </div>

@@ -10,16 +10,13 @@
     </head>
 
     <body>
-        <jsp:include page="/WEB-INF/header.jsp"/>
         <div class="wrapper">
             <div id="content">
                 <h1>OOPS!</h1>
                 <p><%= request.getSession().getAttribute("error_message") %></p>
                 <div class="forms">
                     <form class="form">
-                        <a href="success">
-                            <button type="button" class="btn">Return</button>
-                        </a>
+                        <button type="button" class="btn" onclick="history.back()">Return</button>
                     </form>
                 </div>
             </div>

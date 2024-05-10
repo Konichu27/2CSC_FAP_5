@@ -9,19 +9,19 @@ package models;
  * @author pc
  */
 public class UploadedFile {
-    private int fileId;
-    private String fileName;
+    private String uploader;
+    private String filePath;
 
-    public UploadedFile(int fileId, String fileName) {
-        this.fileId = fileId;
-        this.fileName = fileName;
+    public UploadedFile(String username, String fileName) {
+        this.uploader = username;
+        this.filePath = fileName;
     }
 
-    public int getFileId() {
-        return fileId;
+    public String getUploader() {
+        return uploader;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getFilePath() {
+        return filePath;
     }
 }

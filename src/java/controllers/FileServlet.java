@@ -23,16 +23,16 @@ public class FileServlet extends HttpServlet {
         pass = getServletContext().getInitParameter("password_mysql");
     }
 
-  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    String fileId = request.getParameter("fileId");
-    if (fileId == null || fileId.isEmpty()) {
+  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    String fileUploader = request.getParameter("uploader");
+    if (fileUploader == null || fileUploader.isEmpty()) {
         response.getWriter().println("Invalid file ID");
         return;
     }
 
     FileDetails fileDetails;
     try {
-        fileDetails = getFileDetailsFromDatabase(fileId);
+        fileDetails = getFileDetailsFromDatabase(fileUploader);
     } catch (ServletException | ClassNotFoundException e) {
         e.printStackTrace();
         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error accessing file details.");
@@ -45,14 +45,13 @@ public class FileServlet extends HttpServlet {
     }
 
         File downloadFile = new File(fileDetails.filePath);
-
         if (!downloadFile.exists()) {
             response.getWriter().println("File not found");
             return;
         }
 
         response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileDetails.fileName + "\"");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + "Resume_" + fileDetails.fileOwner + ".pdf" + "\"");
 
         try (FileInputStream inputStream = new FileInputStream(downloadFile);
              OutputStream outputStream = response.getOutputStream()) {
@@ -66,14 +65,21 @@ public class FileServlet extends HttpServlet {
         }
     }
 
-private FileDetails getFileDetailsFromDatabase(String fileId) throws ServletException, ClassNotFoundException {
-    String sql = "SELECT file_name, file_path FROM uploaded_files WHERE file_id = ?";
+private FileDetails getFileDetailsFromDatabase(String username) throws ServletException, ClassNotFoundException {
+    String sql = "SELECT first_name, last_name, resume_filepath FROM applicant WHERE email = ?";
+    System.out.println("The username is " + username);
     try (Connection conn = generateConnection(dbDriver, dbURL, user, pass);
-         PreparedStatement pstmt = conn.prepareStatement(sql)) {
-        pstmt.setInt(1, Integer.parseInt(fileId));
+        PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        pstmt.setString(1, username);
         try (ResultSet rs = pstmt.executeQuery()) {
             if (rs.next()) {
-                return new FileDetails(rs.getString("file_name"), rs.getString("file_path"));
+                String fileOwner = rs.getString("first_name") + " " + rs.getString("last_name");
+                String filePath = rs.getString("resume_filepath");
+                if (rs.wasNull()) {
+                    filePath = ""; // set it to empty string as you desire.
+                    System.out.println("The file path is null!");
+                }
+                return new FileDetails(fileOwner, filePath);
             }
         }
     } catch (SQLException e) {
@@ -87,11 +93,11 @@ private FileDetails getFileDetailsFromDatabase(String fileId) throws ServletExce
 
     // Helper class to hold file details
     private static class FileDetails {
-        String fileName;
+        String fileOwner;
         String filePath;
 
-        FileDetails(String fileName, String filePath) {
-            this.fileName = fileName;
+        FileDetails(String fileUploader, String filePath) {
+            this.fileOwner = fileUploader;
             this.filePath = filePath;
         }
     }

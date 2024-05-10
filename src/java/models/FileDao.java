@@ -14,13 +14,17 @@ public class FileDao {
 
     public static List<UploadedFile> getUploadedFiles(String dbDriver, String dbURL, String user, String pass) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         List<UploadedFile> files = new ArrayList<>();
-        String sql = "SELECT file_id, file_name FROM uploaded_files";
+        String sql = "SELECT resume_filepath, email FROM applicant";
         
         try (Connection conn = generateConnection(dbDriver,dbURL, user, pass);
             PreparedStatement pstmt = conn.prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
-                files.add(new UploadedFile(rs.getInt("file_id"), rs.getString("file_name")));
+                String filePath = rs.getString("resume_filepath");
+                if (rs.wasNull()) {
+                    filePath = ""; // set it to empty string as you desire.
+                }
+                files.add(new UploadedFile(rs.getString("email"), filePath));
             }
         } catch (SQLException e) {
             e.printStackTrace();

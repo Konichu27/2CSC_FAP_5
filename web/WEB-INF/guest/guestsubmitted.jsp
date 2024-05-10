@@ -35,24 +35,15 @@
     <div class="forms">
       <h2>Application Details</h2>
       <form class="form">
-        <input id="details" name="salutations" placeholder="Salutations" required autocomplete="off">
-        <input id="details" name="first name" placeholder="First Name" required autocomplete="off">
-        <input id="details" name="last name" placeholder="Last Name" required autocomplete="off">
-        <input id="details" name="number" type="number" placeholder="Mobile Number" required autocomplete="off">
-        <input id="details" name="email" placeholder="Email" required autocomplete="off">
-        <input id="details" name="role" placeholder="Role" required autocomplete="off">
+        <input disabled="disabled" name="details" id="salutations" placeholder="<%= request.getAttribute("salutations") %>" required autocomplete="off">
+        <input disabled="disabled" name="details" id="first_name" placeholder="<%= request.getAttribute("first_name") %>" required autocomplete="off">
+        <input disabled="disabled" name="details" id="last_name" placeholder="<%= request.getAttribute("last_name") %>" required autocomplete="off">
+        <input disabled="disabled" name="details" id="mobile_number" type="<%= request.getAttribute("mobile_number") %>" placeholder="Mobile Number" required autocomplete="off">
+        <input disabled="disabled" name="details" id="email" placeholder="<%= request.getAttribute("email") %>" required autocomplete="off">
+        <input disabled="disabled" name="details" id="app_role" placeholder="<%= request.getAttribute("app_role") %>" required autocomplete="off">
         <div class="upload">
         <p class="upload">Upload Resume</p>
         </div>
-        <label class="checkbox">
-        <input type="checkbox"> <p class="checkbox">I have read and agree to ActiveLearning's
-        <a href="https://activelearning.ph/data-privacy-policy/?fbclid=IwAR0yKcTQSWinkr1M9c1ZCSWp8UbU5OZrHw63Urx1eP4YnrJ8_rHDosWDyeE">data privacy agreement</a>
-        </p>
-        </input>
-        </label>
-       
-        <br>
-        <button type="submit" class="btn">SUBMIT</button>
       </form>
     </div>
   </div>

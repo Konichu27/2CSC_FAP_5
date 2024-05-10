@@ -1,80 +1,66 @@
 package controllers;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import static models.ConnectionGenerator.generateConnection;
 
-/**
- *
- * @author Dayao, Leonne Matthew H. // UST - 1CSC
- */
-public class GuestServlet extends HttpServlet
-{
+@WebServlet(name = "GuestServlet", urlPatterns = {"/checkGuest"})
+public class GuestServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        // GET
-        // 1. Submit PreparedStatement w/ con for email on APPLICATION.
-        // 2. If exist,
-        //       set path as guest-submitted.jsp
-        // 3. Else set path as guest.jsp
-        // 4. Forward path
+
+        // String path = "/WEB-INF/guest/guest.jsp"; // Default redirect
+        boolean isSubmitted = false;
+
+        try {
+            String dbDriver = getServletContext().getInitParameter("driver_mysql");
+            String dbURL = getServletContext().getInitParameter("url_mysql");
+            String user = getServletContext().getInitParameter("username_mysql");
+            String pass = getServletContext().getInitParameter("password_mysql");
+            
+            try (Connection con = generateConnection(dbDriver, dbURL, user, pass)) {
+                String sql = "SELECT * FROM applicant WHERE email = ?";
+                PreparedStatement pstmt = con.prepareStatement(sql);
+                pstmt.setString(1, request.getSession().getAttribute("uname").toString());
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next()) {
+                        // set attributes
+                        request.setAttribute("salutations", rs.getString("salutations").trim());
+                        request.setAttribute("first_name", rs.getString("first_name").trim());
+                        request.setAttribute("last_name", rs.getString("last_name").trim());
+                        request.setAttribute("mobile_number", rs.getString("mobile_number").trim());
+                        request.setAttribute("email", rs.getString("email").trim());
+                        request.setAttribute("app_role", rs.getString("app_role").trim());
+                        isSubmitted = true;
+                    }
+                }
+            }
+        }
+        catch (SQLException | ClassNotFoundException e) {
+                e.printStackTrace();  // Better error handling
+                String error = "Database connection error. Please try again.";
+                request.getSession().setAttribute("error_message", error);
+                response.sendRedirect("error.jsp");
+            }
+        
+        String path = "";
+        if (isSubmitted) {
+            path = "/WEB-INF/guest/guestsubmitted.jsp";
+        }
+        else path = "/WEB-INF/guest/guest.jsp";
+        RequestDispatcher dispatcher = request.getRequestDispatcher(path);
+        dispatcher.forward(request, response);
     }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
-        processRequest(request, response);
-    }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException
-    {
-        processRequest(request, response);
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo()
-    {
-        return "Short description";
-    }// </editor-fold>
-
 }

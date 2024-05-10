@@ -50,7 +50,7 @@ public class WelcomeServlet extends HttpServlet
             }
             else if (urole.equals("Guest")) {
                 // TODO redirect this to guest.jsp or guest-submitted.jsp
-                redirectedLink += "guest.jsp";
+                redirectedLink += "checkGuest";
             }
             else {
                 response.sendRedirect("index.jsp");

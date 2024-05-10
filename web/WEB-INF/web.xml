@@ -130,6 +130,10 @@
         <servlet-name>ArchiveServlet</servlet-name>
         <servlet-class>controllers.ArchiveServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>InsertionServlet</servlet-name>
+        <servlet-class>controllers.InsertionServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/logout</url-pattern>
@@ -160,7 +164,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>GuestServlet</servlet-name>
-        <url-pattern>/submit</url-pattern>
+        <url-pattern>/checkGuest</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>UserServlet</servlet-name>
@@ -173,6 +177,10 @@
     <servlet-mapping>
         <servlet-name>ArchiveServlet</servlet-name>
         <url-pattern>/archives</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InsertionServlet</servlet-name>
+        <url-pattern>/submit</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

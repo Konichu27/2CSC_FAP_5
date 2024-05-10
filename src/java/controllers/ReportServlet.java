@@ -105,6 +105,7 @@ public class ReportServlet extends HttpServlet
             }*/
             document.close();
         } catch (DocumentException | SQLException e) {
+            e.printStackTrace();
             throw new PdfGenerationException("PDF generation failed. Please check server logs.");
         }
     }
@@ -152,10 +153,89 @@ public class ReportServlet extends HttpServlet
             
             document.close();
         } catch (DocumentException | SQLException e) {
+            e.printStackTrace();
             throw new PdfGenerationException("PDF generation failed. Please check server logs.");
         }
     }
 
+    /**
+     * 
+     * @param os Output stream to write PDF to
+     * @param con Database connection to reference
+     * @param username Username for footer
+     * @param isArchived 'false' checks current, 'true' checks archives
+     * @throws PdfGenerationException 
+     */
+    private void generateApplicantReport(OutputStream os, Connection con, String username, boolean isArchived) throws PdfGenerationException {
+        Document document = new Document(PageSize.LETTER.rotate());
+        try {
+            PdfWriter writer = PdfWriter.getInstance(document, os);
+            
+            // Set String title to use. (ternary operator)
+            // if archived, then output Archived Applicants
+            // else, output Current Applicants
+            
+            String title = (isArchived) ? ("Archived Applicants") : ("Current Applicants");
+            HeaderAndFooter event = new HeaderAndFooter(title, username);
+            writer.setPageEvent(event);
+
+            document.setMargins(36f, 36f, 54f, 36f);
+            document.open();
+
+            /* Margins */
+
+            /* Table Settings */
+            PdfPTable table = new PdfPTable(6);
+            table.setWidthPercentage(100); 
+            table.setSpacingAfter(10f); 
+
+            float[] columnWidths = {1f, 1f, 1f, 1f, 1f, 1f};
+            table.setWidths(columnWidths);
+            
+            /* Table Header */
+            Font tableHeaderFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
+
+            table.addCell(new Phrase("Salutations", tableHeaderFont));
+            table.addCell(new Phrase("First Name", tableHeaderFont));
+            table.addCell(new Phrase("Last Name", tableHeaderFont));
+            table.addCell(new Phrase("Applied Role", tableHeaderFont));
+            table.addCell(new Phrase("Email", tableHeaderFont));
+            table.addCell(new Phrase("Mobile #", tableHeaderFont));
+            
+            /* Table Contents */
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM file.applicant ORDER BY last_name");
+            // if archived, look for values marked 1 in the table
+            // else, look for 0 (current)
+            int tinyIntValue = (isArchived) ? (1) : (0);
+            try (ResultSet rs = ps.executeQuery())
+            {
+                while (rs.next()) {
+                    if (rs.getInt("archive") == tinyIntValue) {
+                        table.addCell(rs.getString("salutations").trim());
+                        table.addCell(rs.getString("first_name").trim());
+                        table.addCell(rs.getString("last_name").trim());
+                        table.addCell(rs.getString("app_role").trim());
+                        table.addCell(rs.getString("email").trim());
+                        table.addCell(rs.getString("mobile_number"));
+                    }
+                }
+            }
+            document.add(table);
+
+            /*while ((writer.getPageNumber() % 2) != 0) {
+                document.setMargins(document.leftMargin(),
+                                    document.rightMargin(),
+                                    document.topMargin() + 10f,
+                                    document.bottomMargin());
+                document.newPage();
+            }*/
+            document.close();
+        } catch (DocumentException | SQLException e) {
+            e.printStackTrace();
+            throw new PdfGenerationException("PDF generation failed. Please check server logs.");
+        }
+    }
+    
     /*
      * Header and Footer Page Event Helper Class
      */
@@ -290,44 +370,70 @@ public class ReportServlet extends HttpServlet
                     + timestamp
                     + ".pdf");
             
-            String driver = getServletContext().getInitParameter("driver");
-            String url = getServletContext().getInitParameter("url"); // change to UserDB once ready
-            String username = getServletContext().getInitParameter("username");
-            String password = getServletContext().getInitParameter("password");
+            String requestType = request.getParameter("reportType");
+            
+            
+            // Checks which database to use.
+            // If full_rec or self_rec, refers to Derby settings.
+            // If archived_app or current_app, refers to MySQL settings.
+            // VERY wordy code but this is rushed soooooo
+            String driver = "", url = "", username = "", password = "";
+            if (requestType.equals("full_rec") || requestType.equals("self_rec")) {
+                driver = getServletContext().getInitParameter("driver");
+                url = getServletContext().getInitParameter("url"); // change to UserDB once ready
+                username = getServletContext().getInitParameter("username");
+                password = getServletContext().getInitParameter("password");
+            }
+            else if (requestType.equals("archived_app") || requestType.equals("current_app")) {
+                driver = getServletContext().getInitParameter("driver_mysql");
+                url = getServletContext().getInitParameter("url_mysql"); // change to UserDB once ready
+                username = getServletContext().getInitParameter("username_mysql");
+                password = getServletContext().getInitParameter("password_mysql");
+            }
             
             String key = getServletContext().getInitParameter("key");
             String cipher = getServletContext().getInitParameter("cipher");
             String sessionUname = session.getAttribute("uname").toString();
             
             try (Connection con = ConnectionGenerator.generateConnection(driver, url, username, password)) {
-                try (ServletOutputStream sos = response.getOutputStream()) {
-                    System.out.println("Report type: " + request.getParameter("reportType"));
-                    switch (request.getParameter("reportType"))
-                    {
-                        case "full_rec": // Option to print all records
-                            generateUserInfoReport(sos, con, sessionUname);
-                            break;
-                        case "self_rec": // Option to print only their records
-                            generateSelfReport(sos, con, key, cipher, sessionUname);
-                            break;
-                        default:
-                            sos.flush();
-                            sos.close();
-                            throw new InvalidRequestException("The request to the server did not have the required attributes for it.");
-                    }
+                ServletOutputStream sos = response.getOutputStream();
+                System.out.println("Report type: " + request.getParameter("reportType"));
+                switch (request.getParameter("reportType")) {
+                    case "full_rec": // Option to print all records
+                        generateUserInfoReport(sos, con, sessionUname);
+                        break;
+                    case "self_rec": // Option to print only their records
+                        generateSelfReport(sos, con, key, cipher, sessionUname);
+                        break;
+                    case "archived_app": // True means print out archived applicants
+                        generateApplicantReport(sos, con, sessionUname, true);
+                        break;
+                    case "current_app": // False means print out current applicants
+                        generateApplicantReport(sos, con, sessionUname, false);
+                        break;
+                    default:
+                        sos.flush();
+                        sos.close();
+                        throw new InvalidRequestException("The request to the server did not have the required attributes for it.");
                 }
+                sos.flush();
+                sos.close();
                 // connects to success.jsp, see form sending to downloadReport
             }
             catch (Exception e) { 
+                e.printStackTrace();
                 String error = "There was a problem with downloading the PDF file.\nPlease try again.";
                 request.getSession().setAttribute("error_message", error);
                 RequestDispatcher rs = request.getRequestDispatcher("error.jsp");
+                response.reset();
                 rs.forward(request, response);
             }
         }
         else {
-            response.setContentType("text/html;charset=UTF-8");
-            response.sendRedirect("error_session.jsp");
+            String error = "You cannot access this page directly.";
+            request.getSession().setAttribute("error_message", error);
+            RequestDispatcher rs = request.getRequestDispatcher("error.jsp");
+            rs.forward(request, response);
         }
     }
 

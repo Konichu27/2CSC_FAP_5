@@ -55,10 +55,6 @@ public class ApplicantServlet extends HttpServlet {
                     String lastName = rs.getString("last_name");
                     String appRole = rs.getString("app_role");
                     String mobileNumber = rs.getString("mobile_number");
-                    String landlineNumber = "";
-                    if (!(rs.getString("landline_number") == null)) {
-                        landlineNumber = rs.getString("landline_number");
-                    }
                     tableOutput += "<tr><td>" + "<input type=\"checkbox\">"
                             + "</td><td>" + salutations
                             + "</td><td>" + firstName
@@ -66,7 +62,10 @@ public class ApplicantServlet extends HttpServlet {
                             + "</td><td>" + appRole
                             + "</td><td>" + email
                             + "</td><td>" + mobileNumber
-                            + "</td><td>" + "<a href=\"#\"><u>view</u></a>" // resume
+                            + "</td><td>" + "<button type=\"submit\" id=\"uploader\""
+                                          + "name=\"uploader\" class=\"btn\" value=\""
+                                          + email
+                                          + "\">view</button>"// resume
                             + "</td></tr>";
             }
             request.setAttribute("table", tableOutput);

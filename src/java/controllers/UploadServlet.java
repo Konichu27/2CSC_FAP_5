@@ -55,8 +55,16 @@ public class UploadServlet extends HttpServlet {
                 out.write(bytes, 0, read);
             }
 
-            // Save file information to the database
-            saveFileDetails(fileName, file.getAbsolutePath(), uploader);
+            String sql = "INSERT INTO uploaded_files (file_name, file_path, uploader, upload_date) VALUES (?, ?, ?, NOW())"; // Make sure the table name matches your DB
+            try (Connection conn = generateConnection(dbDriver, dbURL, user, pass);
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, fileName);
+                pstmt.setString(2, file.getAbsolutePath());
+                pstmt.setString(3, uploader);
+                pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace(); // Log the exception for better debugging
+            }
 
             response.getWriter().println("File " + fileName + " has been uploaded successfully!");
         } catch (Exception e) {
@@ -64,19 +72,6 @@ public class UploadServlet extends HttpServlet {
             e.printStackTrace();
         }
     }
-
-private void saveFileDetails(String fileName, String filePath, String uploader) throws SQLException, ClassNotFoundException {
-    String sql = "INSERT INTO uploaded_files (file_name, file_path, uploader, upload_date) VALUES (?, ?, ?, NOW())"; // Make sure the table name matches your DB
-    try (Connection conn = generateConnection(dbDriver, dbURL, user, pass);
-        PreparedStatement pstmt = conn.prepareStatement(sql)) {
-        pstmt.setString(1, fileName);
-        pstmt.setString(2, filePath);
-        pstmt.setString(3, uploader);
-        pstmt.executeUpdate();
-    } catch (SQLException e) {
-        e.printStackTrace(); // Log the exception for better debugging
-    }
-}
 
 
     private String getFileName(final Part part) {

@@ -64,9 +64,10 @@
 
                 <div class="reports">
                     <h3>Generate Report:</h3>
-                    <button type="printSelf" class="btn" value="self_rec">Self-Record</button>
-                    <button type="printFull" class="btn" value="full_rec">Full-Record</button>
-
+                    <form action="/2CSC_FAP_5/downloadReport" method="POST">
+                        <button type="submit" id="reportType" name="reportType" class="btn" value="self_rec">Self-Record</button>
+                        <button type="submit" id="reportType" name="reportType" class="btn" value="full_rec">Full-Record</button>
+                    </form>
                 </div>
             </div>
         </div>

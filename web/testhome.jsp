@@ -19,6 +19,7 @@
 
     <h2>Download Uploaded Files</h2>
     <ul>
+        <form action="files" method="POST">
         <% 
             String dbDriver = getServletContext().getInitParameter("driver_mysql");
             String dbURL = getServletContext().getInitParameter("url_mysql");
@@ -30,10 +31,9 @@
                     out.println("<li>No files available for download.</li>");
                 } else {
                     for (UploadedFile file : uploadedFiles) {
-                        String fileName = file.getFileName();
-                        int fileId = file.getFileId();
+                        String uploader = file.getUploader();
         %>
-                        <li><a href="files?fileId=<%= fileId %>"><%= fileName %></a></li>
+                        <button type="submit" id="uploader" name="uploader" class="btn" value="<%= uploader %>">view</button>
         <%
                     }
                 }
@@ -42,6 +42,7 @@
                 e.printStackTrace();
             }
         %>
+        </form>
     </ul>
 </body>
 </html>

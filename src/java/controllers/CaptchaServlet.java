@@ -58,6 +58,7 @@ public class CaptchaServlet extends HttpServlet
             throws ServletException, IOException
     {
         response.setContentType("text/html;charset=UTF-8");
+        System.out.println(System.getProperty("com.sun.aas.instanceRoot"));
         String uname, urole;
         HttpSession session = request.getSession(); 
         try {
