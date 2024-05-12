@@ -111,7 +111,6 @@
         <div id="myLinks" class="myLinks">
             <a href="applicants" class="other">Applicants</a>
             <a href="accounts" class="other">Accounts</a>
-            <a href="archives"class="other">Archives</a>
             <a href="/2CSC_FAP_5/logout" class="btn">Sign Out</a>
         </div>
         <!-- "Hamburger menu" / "Bar icon" to toggle the navigation links -->

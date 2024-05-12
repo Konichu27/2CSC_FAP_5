@@ -13,7 +13,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="Sign In" />
         <link rel="shortcut icon" href="https://activelearning.ph/wp-content/uploads/2021/03/cropped-favicon-1-192x192.png"/>
-        <style><%@include file="/css/styles.css"%></style>
+        <style><%@include file="/css/signtest.css"%></style>
         <title>Sign In Page</title>
     </head>
     <%  // Removes cache from index.jsp to prevent form resubmission
@@ -63,6 +63,5 @@
               </div>
             </div>
           </div>    
-        <jsp:include page="/WEB-INF/footer.jsp"/>
     </body>
 </html>

@@ -34,7 +34,7 @@
 
     <div class="forms">
       <h2>Application Details</h2>
-      <form class="form" action="/2CSC_FAP_5/submit" method="POST">
+      <form class="form" action="/2CSC_FAP_5/uploads" method="POST" enctype="multipart/form-data">
         <select id="details" name="salutations" placeholder="Salutations" required autocomplete="off" enctype="multipart/form-data">
             <option value="">Salutations</option>
             <option value="Mr.">Mr.</option>
@@ -62,7 +62,7 @@
             <option value="IT Support (Full-Time)">IT Support (Full-Time)</option>
         </select>
         <div class="upload">
-        <!--<input type="file" name="file" required>-->
+        <input type="file" name="file" required>
         </div>
         <label class="checkbox">
         <input type="checkbox"> <p class="checkbox">I have read and agree to ActiveLearning's

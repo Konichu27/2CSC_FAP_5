@@ -51,8 +51,12 @@
                    else{e.value="no";location.reload();}
                }
         </script>
-        
-        <jsp:include page="/WEB-INF/header.jsp"/> 
+         <header>
+    <div class="container">
+      <img id="logo" src="ActiveLearningLogo.png" alt="Active Learning Logo">
+    </div>
+  </header>
+
         <div class="wrapper">
             <div id="content">
               <div class="entry-header">

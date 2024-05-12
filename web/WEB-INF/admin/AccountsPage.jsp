@@ -13,7 +13,7 @@
         }
     if (!isAdmin) {
         request.getSession().setAttribute("error_message", def);
-        response.sendRedirect("error.jsp");
+        response.sendRedirect("error_session.jsp");
         }
     %>
     

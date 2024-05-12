@@ -10,7 +10,6 @@
     </head>
 
     <body>
-        <jsp:include page="/WEB-INF/header.jsp"/>
         <div class="wrapper">
             <div id="content">
                 <h1>OOPS!</h1>

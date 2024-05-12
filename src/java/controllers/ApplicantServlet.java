@@ -47,28 +47,27 @@ public class ApplicantServlet extends HttpServlet {
             rs = stmt.executeQuery();
 
             while (rs.next())
-                
-                if (rs.getInt("archive") == 0) {
-                    String email = rs.getString("email");
-                    String salutations = rs.getString("salutations");
-                    String firstName = rs.getString("first_name");
-                    String lastName = rs.getString("last_name");
-                    String appRole = rs.getString("app_role");
-                    String mobileNumber = rs.getString("mobile_number");
-                    tableOutput += "<tr><td>" + "<input type=\"checkbox\">"
-                            + "</td><td>" + salutations
-                            + "</td><td>" + firstName
-                            + "</td><td>" + lastName
-                            + "</td><td>" + appRole
-                            + "</td><td>" + email
-                            + "</td><td>" + mobileNumber
-                            + "</td><td>" + "<button type=\"submit\" id=\"uploader\""
-                                          + "name=\"uploader\" class=\"btn\" value=\""
-                                          + email
-                                          + "\">view</button>"// resume
-                            + "</td></tr>";
+            {
+                String email = rs.getString("email");
+                String salutations = rs.getString("salutations");
+                String firstName = rs.getString("first_name");
+                String lastName = rs.getString("last_name");
+                String appRole = rs.getString("app_role");
+                String mobileNumber = rs.getString("mobile_number");
+                tableOutput += "<tr><td>" + "<input type=\"checkbox\">"
+                        + "</td><td>" + salutations
+                        + "</td><td>" + firstName
+                        + "</td><td>" + lastName
+                        + "</td><td>" + appRole
+                        + "</td><td>" + email
+                        + "</td><td>" + mobileNumber
+                        + "</td><td>" + "<button type=\"submit\" id=\"uploader\""
+                        + "name=\"uploader\" class=\"btn\" value=\""
+                        + email
+                        + "\">view</button>"// resume
+                        + "</td></tr>";
+                request.setAttribute("table", tableOutput);
             }
-            request.setAttribute("table", tableOutput);
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
             request.setAttribute("table", errorOutput);

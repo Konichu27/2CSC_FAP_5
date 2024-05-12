@@ -2,12 +2,14 @@ package controllers;
 
 import java.io.*;
 import java.sql.*;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import static models.ConnectionGenerator.generateConnection;
+import models.InsertionException;
 
 @WebServlet(name = "UploadServlet", urlPatterns =
 {
@@ -29,16 +31,73 @@ public class UploadServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        final String errorOutput = "There was error in insertion. Please go back and try applying again";
+        
+        Connection con = null;
+        PreparedStatement stmt = null;
+        String email = "", salutations = "", firstName = "", lastName = "", appRole = "", mobileNumber = "";
+        
+        try {
+            con = generateConnection(dbDriver, dbURL, user, pass);
+            String sql = "INSERT INTO applicant"
+                    + "(email, salutations, first_name, last_name,"
+                    + "app_role, mobile_number, archive) VALUES "
+                    + " (?, ?, ?, ?, ?, ?, 0)";
+            stmt = con.prepareStatement(sql);
+            
+            email = request.getSession().getAttribute("uname").toString();
+            salutations = request.getParameter("salutations");
+            firstName = request.getParameter("first_name");
+            lastName = request.getParameter("last_name");
+            appRole = request.getParameter("app_role");
+            mobileNumber = request.getParameter("mobile_number");
+            
+            stmt.setString(1, email);
+            stmt.setString(2, salutations);
+            stmt.setString(3, firstName);
+            stmt.setString(4, lastName);
+            stmt.setString(5, appRole);
+            stmt.setString(6, mobileNumber);
+            
+            int checkValue = stmt.executeUpdate();
+            if (checkValue < 1) {
+                throw new InsertionException(errorOutput);
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            request.getSession().setAttribute("error_message", errorOutput);
+            response.sendRedirect("error.jsp");
+            return;
+          }
+           catch (IllegalStateException e) {
+            e.printStackTrace();
+            request.getSession().setAttribute("error_message", errorOutput);
+            response.sendRedirect("error.jsp");
+            return;
+          }
+          catch (Exception e) {
+            e.printStackTrace();
+            request.getSession().setAttribute("error_message", errorOutput);
+            response.sendRedirect("error.jsp");
+            return;
+        } finally {
+            try {
+                if (stmt != null) stmt.close();
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
 
         // Path to save uploaded file
         final String path = getServletContext().getRealPath(UPLOAD_DIRECTORY)+"/";
         final Part filePart = request.getPart("file");
         final String fileName = getFileName(filePart);
-        final String uploader = request.getParameter("uploader"); // Assuming uploader info is provided in the request
 
         // Validate file type
         if (!fileName.toLowerCase().endsWith(".pdf")) {
-            response.getWriter().println("Only PDF files are allowed");
+            request.getSession().setAttribute("error_message", "Only PDF files are allowed.");
+            response.sendRedirect("error.jsp");
             return;
         }
 
@@ -48,28 +107,33 @@ public class UploadServlet extends HttpServlet {
         File file = new File(uploadsDir, fileName);
 
         try (InputStream filecontent = filePart.getInputStream();
-             FileOutputStream out = new FileOutputStream(file)) {
+            FileOutputStream out = new FileOutputStream(file)) {
             int read;
             final byte[] bytes = new byte[1024];  // Adjust size if necessary
             while ((read = filecontent.read(bytes)) != -1) {
                 out.write(bytes, 0, read);
             }
 
-            String sql = "INSERT INTO uploaded_files (file_name, file_path, uploader, upload_date) VALUES (?, ?, ?, NOW())"; // Make sure the table name matches your DB
+            String sql = "UPDATE applicant set resume_filepath = ? WHERE email = ?"; // Make sure the table name matches your DB
             try (Connection conn = generateConnection(dbDriver, dbURL, user, pass);
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
-                pstmt.setString(1, fileName);
-                pstmt.setString(2, file.getAbsolutePath());
-                pstmt.setString(3, uploader);
+                pstmt.setString(1, file.getAbsolutePath());
+                pstmt.setString(2, email);
+                System.out.println("Email is " + email);
                 pstmt.executeUpdate();
             } catch (SQLException e) {
-                e.printStackTrace(); // Log the exception for better debugging
+                e.printStackTrace();
+                request.getSession().setAttribute("error_message", errorOutput);
+                response.sendRedirect("error.jsp");
+                return;
             }
 
-            response.getWriter().println("File " + fileName + " has been uploaded successfully!");
+            response.sendRedirect("/2CSC_FAP_5/checkGuest");
         } catch (Exception e) {
-            response.getWriter().println("Error uploading file: " + e.getMessage());
             e.printStackTrace();
+            request.getSession().setAttribute("error_message", errorOutput);
+            response.sendRedirect("error.jsp");
+            return;
         }
     }
 
