@@ -1,0 +1,5 @@
+USE file;
+CREATE TABLE ReportTimestamp (
+    prevTime TIMESTAMP NOT NULL
+);
+INSERT INTO ReportTimestamp (prevTime) VALUES (CURRENT_TIMESTAMP);
