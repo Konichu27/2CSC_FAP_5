@@ -48,115 +48,133 @@ import models.Security;
 })
 public class ReportServlet extends HttpServlet
 {
-    
-    private void generateUserInfoReport(OutputStream os, Connection con, String username) throws PdfGenerationException {
-        Document document = new Document(PageSize.LETTER.rotate());
-        try {
-            PdfWriter writer = PdfWriter.getInstance(document, os);
-            HeaderAndFooter event = new HeaderAndFooter("User Info Records", username);
-            writer.setPageEvent(event);
-
-            document.setMargins(36f, 36f, 54f, 36f);
-            document.open();
-
-            /* Margins */
-
-            /* Table Settings */
-            PdfPTable table = new PdfPTable(3);
-            table.setWidthPercentage(100); 
-            table.setSpacingAfter(10f); 
-
-            float[] columnWidths = {1f,1f, 1f};
-            table.setWidths(columnWidths);
-            
-            /* Table Header */
-            Font tableHeaderFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
-
-            table.addCell(new Phrase("#", tableHeaderFont));
-            table.addCell(new Phrase("User", tableHeaderFont));
-            table.addCell(new Phrase("Role", tableHeaderFont));
-            
-            /* Table Contents */
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM APP.USER_INFO");
-            try (ResultSet rs = ps.executeQuery())
-            {
-                int i = 1;
-                while (rs.next())
-                {
-                    table.addCell(i++ + "");
-                    // Font tableUsernameFont = new Font(Font.FontFamily.HELVETICA, 12); 
-                    // Paragraph tableUsername = new Paragraph(rs.getString("bottomCenter").trim(), reportTypeFont);
-                    String tableUsername = rs.getString("username").trim();
-                    if (tableUsername.equals(username)) {
-                        tableUsername += "*";
-                    }
-                    table.addCell(new Phrase(tableUsername));
-                    table.addCell(rs.getString("role").trim());
-                }
+ private String getLastGeneratedTime(Connection con) {
+    try {
+        String query = "SELECT prevTime FROM ReportTimestamp";
+        try (PreparedStatement ps = con.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getTimestamp("prevTime").toString();
+            } else {
+                log("No previous timestamp found in database.");
+                return "Unknown";
             }
-            document.add(table);
+        }
+    } catch (SQLException e) {
+        log("SQL Exception when fetching last generated time: " + e.getMessage());
+        return "Unknown";  
+    }
+}
 
-            /*while ((writer.getPageNumber() % 2) != 0) {
-                document.setMargins(document.leftMargin(),
-                                    document.rightMargin(),
-                                    document.topMargin() + 10f,
-                                    document.bottomMargin());
-                document.newPage();
-            }*/
-            document.close();
+private void updateLastGeneratedTime(Connection con, LocalDateTime now) {
+    try {
+        String update = "UPDATE ReportTimestamp SET prevTime = ?";
+        try (PreparedStatement ps = con.prepareStatement(update)) {
+            ps.setTimestamp(1, java.sql.Timestamp.valueOf(now));
+            ps.executeUpdate();
+        }
+    } catch (SQLException e) {
+        log("SQL Exception when updating last generated time: " + e.getMessage());
+    }
+}
+
+
+
+ private void generateUserInfoReport(OutputStream os, Connection con, String username) throws PdfGenerationException {
+    Document document = new Document(PageSize.LETTER.rotate());
+    try {
+        LocalDateTime now = LocalDateTime.now();
+
+        // Fetch the last generated time from the database
+        String lastGeneratedTime = getLastGeneratedTime(con);
+        // Update the last generated time in the database
+        updateLastGeneratedTime(con, now);
+
+        PdfWriter writer = PdfWriter.getInstance(document, os);
+        HeaderAndFooter event = new HeaderAndFooter("User Info Records", username, lastGeneratedTime, false);
+        writer.setPageEvent(event);
+        
+        document.setMargins(36f, 36f, 54f, 36f);
+        document.open();
+
+        PdfPTable table = new PdfPTable(3);
+        table.setWidthPercentage(100);
+        table.setSpacingAfter(10f);
+        float[] columnWidths = {1f, 1f, 1f};
+        table.setWidths(columnWidths);
+        Font tableHeaderFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
+        table.addCell(new Phrase("#", tableHeaderFont));
+        table.addCell(new Phrase("User", tableHeaderFont));
+        table.addCell(new Phrase("Role", tableHeaderFont));
+
+        PreparedStatement ps = con.prepareStatement("SELECT * FROM APP.USER_INFO");
+        try (ResultSet rs = ps.executeQuery()) {
+            int i = 1;
+            while (rs.next()) {
+                String tableUsername = rs.getString("username").trim();
+                if (tableUsername.equals(username)) {
+                    tableUsername += "*";
+                }
+                table.addCell(i++ + "");
+                table.addCell(new Phrase(tableUsername));
+                table.addCell(rs.getString("role").trim());
+            }
+        }
+        document.add(table);
+        document.close();
+        
         } catch (DocumentException | SQLException e) {
             e.printStackTrace();
             throw new PdfGenerationException("PDF generation failed. Please check server logs.");
-        }
     }
+}
+
     
-    private void generateSelfReport(OutputStream os, Connection con, String key, String cipher, String username) throws PdfGenerationException {
-        Document document = new Document(new Rectangle(360, 216));
-        try {
-            PdfWriter writer = PdfWriter.getInstance(document, os);
-            
-            // Retrieve passwordEntry
-            String password = "";
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM USER_INFO WHERE username = ?");
-            ps.setString(1, username);
-            
-            try (ResultSet rs = ps.executeQuery())
-            {
-                while (rs.next())
-                {
-                    password = rs.getString("password").trim();
-                    System.out.println(password);
-                }
+ private void generateSelfReport(OutputStream os, Connection con, String key, String cipher, String username) throws PdfGenerationException {
+    Document document = new Document(new Rectangle(360, 216));
+    try {
+        LocalDateTime now = LocalDateTime.now();
+
+   // D and Time    
+        String lastGeneratedTime = getLastGeneratedTime(con);
+        updateLastGeneratedTime(con, now);
+
+        PdfWriter writer = PdfWriter.getInstance(document, os);
+
+        // Retrieve password
+        String password = "";
+        PreparedStatement ps = con.prepareStatement("SELECT * FROM USER_INFO WHERE username = ?");
+        ps.setString(1, username);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                password = rs.getString("password").trim();
             }
-
-            document.setMargins(36f, 36f, 54f, 36f);
-            document.open();
-            
-            // Add spaces
-            document.add(new Paragraph(" "));
-            document.add(new Paragraph(" "));
-            
-            // Decrypt passwordEntry
-            String truePassword = Security.decrypt(password, key, cipher);
-
-            // user and role
-            Font contentFont = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
-            Paragraph usernameEntry = new Paragraph("Username: " + username, contentFont);
-            usernameEntry.setAlignment(Element.ALIGN_CENTER);
-            Paragraph passwordEntry = new Paragraph("Password: " + truePassword, contentFont);
-            passwordEntry.setAlignment(Element.ALIGN_CENTER);
-            document.add(usernameEntry);
-            document.add(passwordEntry);
-            
-            HeaderAndFooter event = new HeaderAndFooter("Self Record", username, true);
-            writer.setPageEvent(event);
-            
-            document.close();
-        } catch (DocumentException | SQLException e) {
-            e.printStackTrace();
-            throw new PdfGenerationException("PDF generation failed. Please check server logs.");
         }
+
+        document.setMargins(36f, 36f, 54f, 36f);
+        document.open();
+        
+        // Decrypt password
+        String truePassword = Security.decrypt(password, key, cipher);
+
+        // user and role
+        Font contentFont = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
+        Paragraph usernameEntry = new Paragraph("Username: " + username, contentFont);
+        usernameEntry.setAlignment(Element.ALIGN_CENTER);
+        Paragraph passwordEntry = new Paragraph("Password: " + truePassword, contentFont);
+        passwordEntry.setAlignment(Element.ALIGN_CENTER);
+        document.add(usernameEntry);
+        document.add(passwordEntry);
+        
+        // Header and Footer with last generated time
+        HeaderAndFooter event = new HeaderAndFooter("Self Record", username, lastGeneratedTime, true);
+        writer.setPageEvent(event);
+        
+        document.close();
+    } catch (DocumentException | SQLException e) {
+        e.printStackTrace();
+        throw new PdfGenerationException("PDF generation failed. Please check server logs.");
     }
+}
 
     /**
      * 
@@ -166,74 +184,59 @@ public class ReportServlet extends HttpServlet
      * @param isArchived 'false' checks current, 'true' checks archives
      * @throws PdfGenerationException 
      */
-    private void generateApplicantReport(OutputStream os, Connection con, String username, boolean isArchived) throws PdfGenerationException {
-        Document document = new Document(PageSize.LETTER.rotate());
-        try {
-            PdfWriter writer = PdfWriter.getInstance(document, os);
-            
-            // Set String title to use. (ternary operator)
-            // if archived, then output Archived Applicants
-            // else, output Current Applicants
-            
-            String title = (isArchived) ? ("Archived Applicants") : ("Current Applicants");
-            HeaderAndFooter event = new HeaderAndFooter(title, username);
-            writer.setPageEvent(event);
+   private void generateApplicantReport(OutputStream os, Connection con, String username, boolean isArchived) throws PdfGenerationException {
+    Document document = new Document(PageSize.LETTER.rotate());
+    try {
+        LocalDateTime now = LocalDateTime.now();
+        String formattedNow = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String lastGeneratedTime = (String) getServletContext().getAttribute("lastGeneratedTime");
+        getServletContext().setAttribute("lastGeneratedTime", formattedNow);
 
-            document.setMargins(36f, 36f, 54f, 36f);
-            document.open();
+        PdfWriter writer = PdfWriter.getInstance(document, os);
 
-            /* Margins */
+        // Set String title to use. (ternary operator)
+        // if archived, then output Archived Applicants
+        // else, output Current Applicants
+        String title = (isArchived) ? "Archived Applicants" : "Current Applicants";
+        HeaderAndFooter event = new HeaderAndFooter(title, username, lastGeneratedTime, false);
+        writer.setPageEvent(event);
 
-            /* Table Settings */
-            PdfPTable table = new PdfPTable(6);
-            table.setWidthPercentage(100); 
-            table.setSpacingAfter(10f); 
+        document.setMargins(36f, 36f, 54f, 36f);
+        document.open();
 
-            float[] columnWidths = {1f, 1f, 1f, 1f, 1f, 1f};
-            table.setWidths(columnWidths);
-            
-            /* Table Header */
-            Font tableHeaderFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
+        PdfPTable table = new PdfPTable(6);
+        table.setWidthPercentage(100);
+        table.setSpacingAfter(10f);
+        float[] columnWidths = {1f, 1f, 1f, 1f, 1f, 1f};
+        table.setWidths(columnWidths);
 
-            table.addCell(new Phrase("Salutations", tableHeaderFont));
-            table.addCell(new Phrase("First Name", tableHeaderFont));
-            table.addCell(new Phrase("Last Name", tableHeaderFont));
-            table.addCell(new Phrase("Applied Role", tableHeaderFont));
-            table.addCell(new Phrase("Email", tableHeaderFont));
-            table.addCell(new Phrase("Mobile #", tableHeaderFont));
-            
-            /* Table Contents */
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM file.applicant ORDER BY last_name");
-            // if archived, look for values marked 1 in the table
-            // else, look for 0 (current)
-            
-            /* !!!!!!!!!!!!!!! Remove the next three commented lines
-                               if you want the servlet to put archive-flagged
-                               records on http://localhost:8080/2CSC_FAP_5/admin/accounts */
-            
-            // int tinyIntValue = (isArchived) ? (1) : (0);
-            try (ResultSet rs = ps.executeQuery())
-            {
-                while (rs.next()) {
-                    // if (rs.getInt("archive") == tinyIntValue) {
-                        table.addCell(rs.getString("salutations").trim());
-                        table.addCell(rs.getString("first_name").trim());
-                        table.addCell(rs.getString("last_name").trim());
-                        table.addCell(rs.getString("app_role").trim());
-                        table.addCell(rs.getString("email").trim());
-                        table.addCell(rs.getString("mobile_number"));
-                    // }
-                }
+        Font tableHeaderFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
+        table.addCell(new Phrase("Salutations", tableHeaderFont));
+        table.addCell(new Phrase("First Name", tableHeaderFont));
+        table.addCell(new Phrase("Last Name", tableHeaderFont));
+        table.addCell(new Phrase("Applied Role", tableHeaderFont));
+        table.addCell(new Phrase("Email", tableHeaderFont));
+        table.addCell(new Phrase("Mobile #", tableHeaderFont));
+
+        PreparedStatement ps = con.prepareStatement("SELECT * FROM file.applicant ORDER BY last_name");
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                table.addCell(rs.getString("salutations").trim());
+                table.addCell(rs.getString("first_name").trim());
+                table.addCell(rs.getString("last_name").trim());
+                table.addCell(rs.getString("app_role").trim());
+                table.addCell(rs.getString("email").trim());
+                table.addCell(rs.getString("mobile_number"));
             }
-            document.add(table);
-
-            document.close();
-        } catch (DocumentException | SQLException e) {
-            e.printStackTrace();
-            throw new PdfGenerationException("PDF generation failed. Please check server logs.");
         }
+        document.add(table);
+        document.close();
+    } catch (DocumentException | SQLException e) {
+        e.printStackTrace();
+        throw new PdfGenerationException("PDF generation failed. Please check server logs.");
     }
-    
+}
+
     /*
      * Header and Footer Page Event Helper Class
      */
@@ -246,80 +249,74 @@ public class ReportServlet extends HttpServlet
      * @param isSmall Outputs a different, appropriately-sized header & footer if the document is set as small
      */
     private class HeaderAndFooter extends PdfPageEventHelper {
-        private String title, username;
-        private boolean isSmall = false;
-        private Font headerFooterFont = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.ITALIC);
-        private Font webDomainFont = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL);
-        private Font reportTypeFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLDITALIC);
+    private String title, username, lastGeneratedTime;
+    private boolean isSmall = false;
+    private Font headerFooterFont = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.ITALIC);
+    private Font webDomainFont = new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL);
+    private Font reportTypeFont = new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.BOLDITALIC);
 
+    public HeaderAndFooter(String title, String username, String lastGeneratedTime, boolean isSmall) {
+        this.title = title;
+        this.username = username;
+        this.lastGeneratedTime = lastGeneratedTime;
+        this.isSmall = isSmall;
+    }
         public HeaderAndFooter(String title, String username) {
-            this.title = title;
-            this.username = username;
-        }
-        
-        public HeaderAndFooter(String title, String username, boolean isSmall) {
-            this.title = title;
-            this.username = username;
-            this.isSmall = isSmall;
-        }
+        this.title = title;
+        this.username = username;
+        this.lastGeneratedTime = null; // No last generation time provided
+    }
+           public HeaderAndFooter(String title, String username, boolean isSmall) {
+        this.title = title;
+        this.username = username;
+        this.isSmall = isSmall;
+        this.lastGeneratedTime = null; // No last generation time provided
+    }
 
-        @Override
-        public void onEndPage(PdfWriter writer, Document document) {
-            PdfContentByte cb = writer.getDirectContent();
+
+    @Override
+    public void onEndPage(PdfWriter writer, Document document) {
+        PdfContentByte cb = writer.getDirectContent();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy - h:mm:ss a");
+        String timestamp = LocalDateTime.now().format(formatter);
+
+        if (isSmall) {
+            String footerContent = "Page " + writer.getPageNumber() + " of 1";
+            
+            /* Header */
+            ColumnText.showTextAligned(cb, Element.ALIGN_CENTER, new Phrase(title, reportTypeFont),
+                                       (document.left() + document.right()) / 2f, document.top() - 35, 0);
+            ColumnText.showTextAligned(cb, Element.ALIGN_RIGHT, new Phrase(getServletContext().getInitParameter("Name")
+                    + " - " + getServletContext().getInitParameter("Section"), headerFooterFont),
+                                       document.right() - 2, document.top() + 20, 0);
+            ColumnText.showTextAligned(cb, Element.ALIGN_LEFT, new Phrase(timestamp, headerFooterFont),
+                                       document.left() + 2, document.top() + 20, 0);
+
+            /* Footer */
+            ColumnText.showTextAligned(cb, Element.ALIGN_CENTER, new Phrase(footerContent, headerFooterFont),
+                                       (document.left() + document.right()) / 2, document.bottom() - 20, 0);
+            ColumnText.showTextAligned(cb, Element.ALIGN_LEFT, new Phrase("Last Generated: " + lastGeneratedTime, headerFooterFont),
+                                       document.left() + 2, document.bottom() - 20, 0);
+        } else {
             String footerContent = "Page " + writer.getPageNumber() + " of 2";
             
-            if (isSmall) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd  h:mm:ss a"); 
-                String timestamp = LocalDateTime.now().format(formatter); 
-                footerContent = "Page " + writer.getPageNumber() + " of 1";
+            /* Header */
+            ColumnText.showTextAligned(cb, Element.ALIGN_CENTER, new Phrase(title, reportTypeFont),
+                                       (document.left() + document.right()) / 2f, document.top() + 10, 0);
+            ColumnText.showTextAligned(cb, Element.ALIGN_RIGHT, new Phrase(getServletContext().getInitParameter("Name"), headerFooterFont),
+                                       document.right() - 2, document.top() + 20, 0);
+            ColumnText.showTextAligned(cb, Element.ALIGN_LEFT, new Phrase("Created: " + timestamp, headerFooterFont),
+                                       document.left() + 2, document.top() + 20, 0);
 
-                /* Header */
-
-                ColumnText.showTextAligned(cb, Element.ALIGN_CENTER, new Phrase(title, reportTypeFont),
-                                            (document.left() + document.right()) / 2f, document.top() - 35, 0);
-
-                ColumnText.showTextAligned(cb, Element.ALIGN_RIGHT, new Phrase(getServletContext().getInitParameter("Name")
-                        + " - "
-                        + getServletContext().getInitParameter("Section"), headerFooterFont),
-                                            document.right() - 2, document.top() + 20, 0);
-                ColumnText.showTextAligned(cb, Element.ALIGN_LEFT, new Phrase(timestamp, headerFooterFont),
-                                            document.left() + 2, document.top() + 20, 0);
-
-                /* Footer */
-                ColumnText.showTextAligned(cb, Element.ALIGN_RIGHT, new Phrase(footerContent, headerFooterFont),
-                                            document.right() - 2, document.bottom() - 20, 0);
-                ColumnText.showTextAligned(cb, Element.ALIGN_LEFT, new Phrase(
-                                            "ActiveLearning Inc. | " + 
-                                            getServletContext().getInitParameter("Domain"), webDomainFont),
-                                            document.left() + 2, document.bottom() - 20, 0);
-            }
-            
-            else {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy - h:mm:ss a"); 
-                String timestamp = LocalDateTime.now().format(formatter); 
-
-                /* Header */
-
-                ColumnText.showTextAligned(cb, Element.ALIGN_CENTER, new Phrase(title, reportTypeFont),
-                                            (document.left() + document.right()) / 2f, document.top() + 10, 0);
-
-                ColumnText.showTextAligned(cb, Element.ALIGN_RIGHT, new Phrase(getServletContext().getInitParameter("Name"), headerFooterFont),
-                                            document.right() - 2, document.top() + 20, 0);
-                ColumnText.showTextAligned(cb, Element.ALIGN_LEFT, new Phrase("Created " + timestamp, headerFooterFont),
-                                            document.left() + 2, document.top() + 20, 0);
-
-                /* Footer */
-                ColumnText.showTextAligned(cb, Element.ALIGN_RIGHT, new Phrase(footerContent, headerFooterFont),
-                                            document.right() - 2, document.bottom() - 20, 0);
-                ColumnText.showTextAligned(cb, Element.ALIGN_CENTER, new Phrase(
-                                            "ActiveLearning Inc. | " + 
-                                            getServletContext().getInitParameter("Domain"), webDomainFont),
-                                            (document.left() + document.right()) / 2, document.bottom() - 20, 0);
-                ColumnText.showTextAligned(cb, Element.ALIGN_LEFT, new Phrase(username, headerFooterFont),
-                                            document.left() + 2, document.bottom() - 20, 0);
-            }
+            /* Footer */
+            ColumnText.showTextAligned(cb, Element.ALIGN_RIGHT, new Phrase(footerContent, headerFooterFont),
+                                       document.right() - 2, document.bottom() - 20, 0);
+            ColumnText.showTextAligned(cb, Element.ALIGN_LEFT, new Phrase("Last Generated: " + lastGeneratedTime, headerFooterFont),
+                                       document.left() + 2, document.bottom() - 20, 0);
         }
     }
+}
+
     
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
