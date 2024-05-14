@@ -2,35 +2,39 @@
 
 @media (prefers-reduced-motion: no-preference) {
     * {
-      scroll-behavior: smooth;
+        scroll-behavior: smooth;
     }
-  }
-  
-  body {
+}
+
+body {
     background: #212529;
     color: #1b1b32;
     font-family: Poppins;
     margin: 0;
-  }
-  
-  header {
+}
+
+header {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     position: relative;
     margin-top: 4rem;
-  }
-  
-  .container {
+}
+
+.wrapper {
+    height: auto;
+}
+
+.container {
     width: 100%;
     padding-right: 10px;
     padding-left: 50px;
     margin-right: auto;
     margin-left: auto;
     text-align: center; /* Center content horizontally */
-  }
-  
-  #logo {
+}
+
+#logo {
     display: inline-block;
     padding-top: .3125rem;
     padding-bottom: .3125rem;
@@ -38,59 +42,60 @@
     font-size: 1.25rem;
     line-height: inherit;
     white-space: nowrap;
-  }
-  
+}
 
 
-  #background{
+
+#background{
     display: inline-block;
     white-space: nowrap;
     padding-top: .3125rem;
     padding-bottom: .3125rem;
     font-size: 1.25rem;
     line-height: inherit;
-  }
+}
 
-  h1 {
-  font-weight:700px;
-  text-align: center;
-  font-size: 10rem;
-  margin-top: 2rem; ;
-  color: #F78C26; 
-  margin-bottom: 3rem;
+h1 {
+    font-weight:700px;
+    text-align: center;
+    font-size: 10rem;
+    margin-top: 2rem;
+    ;
+    color: #F78C26;
+    margin-bottom: 3rem;
 }
 
 p {
-  margin-top: -6rem;
-  margin-bottom: -2rem;
-  padding-top: 0%;
-  font-weight: 300; /* or 200 */
-  font-size: 2.5rem;
-  color: #fafafb;
-  text-align: center;
+    margin-top: -6rem;
+    margin-bottom: -2rem;
+    padding-top: 0%;
+    font-weight: 300; /* or 200 */
+    font-size: 2.5rem;
+    color: #fafafb;
+    text-align: center;
 }
-  
+
 .form {
-  text-align: center; 
-  font-size: 1.2rem;
+    text-align: center;
+    font-size: 1.2rem;
 }
 
 .form button {
-  width: 16.5rem;
-  padding: 0.8rem 2rem; 
-  margin-top: 4rem;
-  border: none;
-  background-color: #F78C26; 
-  color: #fff; 
-  border-radius: 4px;
-  cursor: pointer;
-  font-family: Poppins;
-  font-size: 1rem;
-  font-weight: 300;
-  transition: background-color 0.3s ease; 
-  font-weight: bolder;
+    width: 16.5rem;
+    padding: 0.8rem 2rem;
+    margin-top: 4rem;
+    border: none;
+    background-color: #F78C26;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: Poppins;
+    font-size: 1rem;
+    font-weight: 300;
+    transition: background-color 0.3s ease;
+    font-weight: bolder;
 }
 
 .form button:hover {
-  background-color: #a3a3a3; 
+    background-color: #a3a3a3;
 }

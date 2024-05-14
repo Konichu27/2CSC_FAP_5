@@ -206,27 +206,27 @@ public class ReportServlet extends HttpServlet
             PreparedStatement ps = con.prepareStatement("SELECT * FROM file.applicant ORDER BY last_name");
             // if archived, look for values marked 1 in the table
             // else, look for 0 (current)
+            
+            /* !!!!!!!!!!!!!!! Remove the next three commented lines
+                               if you want the servlet to put archive-flagged
+                               records on http://localhost:8080/2CSC_FAP_5/admin/accounts */
+            
             // int tinyIntValue = (isArchived) ? (1) : (0);
             try (ResultSet rs = ps.executeQuery())
             {
                 while (rs.next()) {
+                    // if (rs.getInt("archive") == tinyIntValue) {
                         table.addCell(rs.getString("salutations").trim());
                         table.addCell(rs.getString("first_name").trim());
                         table.addCell(rs.getString("last_name").trim());
                         table.addCell(rs.getString("app_role").trim());
                         table.addCell(rs.getString("email").trim());
                         table.addCell(rs.getString("mobile_number"));
+                    // }
                 }
             }
             document.add(table);
 
-            /*while ((writer.getPageNumber() % 2) != 0) {
-                document.setMargins(document.leftMargin(),
-                                    document.rightMargin(),
-                                    document.topMargin() + 10f,
-                                    document.bottomMargin());
-                document.newPage();
-            }*/
             document.close();
         } catch (DocumentException | SQLException e) {
             e.printStackTrace();

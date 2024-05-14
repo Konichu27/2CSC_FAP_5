@@ -36,7 +36,8 @@
     session.invalidate();
     %>
     <body class = "login-page">
-        <jsp:include page="/WEB-INF/header.jsp"/>
+        <%--<jsp:include page="/WEB-INF/template/header.jsp"/> --%>
+        <jsp:include page="/WEB-INF/template/header.html"/>
         <div class="wrapper">
             <div id="content">
               <div class="entry-header">
@@ -63,5 +64,6 @@
               </div>
             </div>
           </div>    
+        <jsp:include page="/WEB-INF/template/footer.html"/>
     </body>
 </html>

@@ -2,18 +2,18 @@
 
 @media (prefers-reduced-motion: no-preference) {
     * {
-      scroll-behavior: smooth;
+        scroll-behavior: smooth;
     }
-  }
-  
-  body {
+}
+
+body {
     background: #f5f6f7;
     color: #1b1b32;
     font-family: Poppins;
     margin: 0;
-  }
-  
-  header {
+}
+
+header {
     background-color: #252323 !important;
     display: flex;
     flex-wrap: wrap;
@@ -21,22 +21,22 @@
     align-items: center;
     position: relative;
     padding: -.2rem 1rem;
-  }
+}
 
-  .page-header {
+.page-header {
     background: #fafafb no-repeat right;
-  }
+}
 
- .container{
+.container{
     width: 100%;
     padding-right: 10px;
     padding-left: 50px;
     margin-right: auto;
     margin-left: auto;
- }
+}
 
-  
-  #logo {
+
+#logo {
     display: inline-block;
     padding-top: .3125rem;
     padding-bottom: .3125rem;
@@ -44,29 +44,29 @@
     font-size: 1.25rem;
     line-height: inherit;
     white-space: nowrap;
-  }
+}
 
-  #background{
+#background{
     display: inline-block;
     white-space: nowrap;
     padding-top: .3125rem;
     padding-bottom: .3125rem;
     font-size: 1.25rem;
     line-height: inherit;
-  }
-
-  h1.entry-title {
-  font-weight: bolder;
-  text-align: center;
-  margin-right:53.5rem;
-  margin-top: -4.7rem;
-  margin-bottom: 0.5rem; 
-  font-size: 2.5rem;
-  padding-bottom: 0%;
-  color: #0b103f;
 }
 
-  #content {
+h1.entry-title {
+    font-weight: bolder;
+    text-align: center;
+    margin-right:53.5rem;
+    margin-top: -4.7rem;
+    margin-bottom: 0.5rem;
+    font-size: 2.5rem;
+    padding-bottom: 0%;
+    color: #0b103f;
+}
+
+#content {
     background: url('https://activelearning.ph/wp-content/themes/understrap-child/img/bg-page-header.jpg') no-repeat center center;
     background-size: cover;
     width: 100%;
@@ -75,33 +75,33 @@
     font-weight: bolder;
     margin-top: -5rem;
     z-index: -1;
-  }
-  
+}
+
 .form {
-  text-align: center; 
+    text-align: center;
 }
 
 .form input {
-  padding: 0.8rem;
-  margin-bottom: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 .form button {
-  padding: 0.8rem 2rem; 
-  border: none;
-  background-color: orange; 
-  color: #fff; 
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease; 
-  margin-right: 31.1rem;
-  margin-bottom: 2rem;
+    padding: 0.8rem 2rem;
+    border: none;
+    background-color: orange;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    /*transition: background-color 0.3s ease;*/
+    margin-right: 31.1rem;
+    margin-bottom: 2rem;
 }
 
 .form button:hover {
-  background-color: #252323; 
+    background-color: #252323;
 }
 
 
@@ -109,65 +109,65 @@
     display: flex;
     justify-content: space-between;
     margin-top: 1.5rem;
-  }
+}
 
-  .current {
+.current {
     width: 43%;
-  }
+}
 
-  .forms {
+.forms {
     width: calc(50% - 10px);
-  }
+}
 
-  .decision {
+.decision {
     text-align: center;
     border-radius: 10px;
     font-weight: bold;
-  }
+}
 
-  .not-submitted {
+.not-submitted {
     border: 2px solid black;
     background-color: #FFFFFF;
-  }
+}
 
-  .submitted {
+.submitted {
     background-color: #00BF63;
     color: white;
     font-weight: bolder;
     font-size: 22px;
-  }
+}
 .submitted>p{
-  padding: .5em;                            
-}  
-  
-  @media screen and (max-width: 768px) {
+    padding: .5em;
+}
+
+@media screen and (max-width: 768px) {
     .columns {
-      flex-direction: column;
+        flex-direction: column;
     }
-  }
-  .forms input, .forms select {
+}
+.forms input, .forms select {
     margin-right: 5rem;
     width: 80%;
     padding: 0.8rem;
     margin-bottom: 1rem;
     border: 1px solid #ccc;
     border-radius: 4px;
-  }
-  
-  .current{
-    margin-left: 5rem;
-  }
+}
 
-  p.upload{
+.current{
+    margin-left: 5rem;
+}
+
+p.upload{
     margin-top:-.5rem;
     margin-left: -30.3rem;
-  }
+}
 
-  p.checkbox{
+p.checkbox{
     margin-top: -2.2rem;
     margin-left:-3rem;
-  }
+}
 
-  label.checkbox{
-  margin-left: -32.5rem;
-  }
+label.checkbox{
+    margin-left: -32.5rem;
+}

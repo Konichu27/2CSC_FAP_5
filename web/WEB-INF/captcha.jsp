@@ -13,7 +13,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="Captcha" />
         <title>CAPTCHA</title>
-        <style><%@include file="/WEB-INF/css/captcha.css"%></style>
+        <style><%@include file="/css/captcha.css"%></style>
         <script>
             // para hindi macopy
             function preventCopy(event) {
@@ -51,29 +51,23 @@
                    else{e.value="no";location.reload();}
                }
         </script>
-         <header>
-    <div class="container">
-      <img id="logo" src="ActiveLearningLogo.png" alt="Active Learning Logo">
-    </div>
-  </header>
-
+        <jsp:include page="/WEB-INF/template/header.html"/>
         <div class="wrapper">
             <div id="content">
-              <div class="entry-header">
-                <h1 class="entry-title">Captcha Verification</h1>
-              </div>
-              <p>Generated Captcha:</p>
-              <h2 id="captcha" oncopy="preventCopy(event)">${sessionScope.captcha}</h2>
-              
-              <div class="forms">
-                <form class="form" action="captchaVerif" method="POST">
-                  <input id="captchaVerif" name="captchaVerif" type="captcha" placeholder="Enter Captcha*" required autocomplete="off">
-                  <br>
-                  <button type="submit" id="submit" class="btn">Submit</button>
-                </form>
-              </div>
+                <div class="entry-header">
+                    <h1 class="entry-title">Captcha Verification</h1>
+                </div>
+                <div class="forms">
+                    <p>Generated Captcha:</p>
+                    <h2 id="captcha" oncopy="preventCopy(event)">${sessionScope.captcha}</h2>
+                    <form class="form" action="captchaVerif" method="POST">
+                        <input id="captchaVerif" name="captchaVerif" type="captcha" placeholder="Enter Captcha*" required autocomplete="off">
+                        <br>
+                        <button type="submit" id="submit" class="btn">Submit</button>
+                    </form>
+                </div>
             </div>
         </div>
-        <%--<jsp:include page="/WEB-INF/footer.jsp"/> --%>
+        <jsp:include page="/WEB-INF/template/footer.html"/>
     </body>
 </html>

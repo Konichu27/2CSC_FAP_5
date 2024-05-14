@@ -22,13 +22,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Applicant Page" />
     <title>Applicant Page</title>
-    <style><%@include file="/WEB-INF/css/admin.css"%></style>
+    <style><%@include file="/css/admin.css"%></style>
     <link rel="shortcut icon"
         href="https://activelearning.ph/wp-content/uploads/2021/03/cropped-favicon-1-192x192.png" />
 </head>
 
 <body>
-    <jsp:include page="/WEB-INF/header-admin.jsp"/>
+    <jsp:include page="/WEB-INF/template/header-admin.jsp"/>
     <div class="container-whole">
         <main>
             <div class="main-body">
@@ -103,6 +103,7 @@
             }
         }
     </script>
+    <jsp:include page="/WEB-INF/template/footer.html"/>
 </body>
 
 </html>

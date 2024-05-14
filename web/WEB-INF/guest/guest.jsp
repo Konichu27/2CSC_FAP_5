@@ -6,15 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Application" />
   <title>Application</title>
-  <style><%@include file="/WEB-INF/css/guest.css"%></style>
+  <style><%@include file="/css/guest.css"%></style>
 </head>
 
 <body>
-  <header>
-    <div class="container">
-      <img id="logo" src="ActiveLearningLogo.png" alt="Active Learning Logo">
-    </div>
-  </header>
+  <jsp:include page="/WEB-INF/template/header-guest.html"/>
 </div>
 <div class="wrapper">
   <div id="content"></div>
@@ -76,7 +72,7 @@
     </div>
   </div>
 </div>
-
+<jsp:include page="/WEB-INF/template/footer.html"/>
 </body>
 
 </html>

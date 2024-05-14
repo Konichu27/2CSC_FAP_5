@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
-
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <style>div .footer > * {
+        <style>
+            div .footer > * {
                 .footer {
                     position: fixed;
                     bottom: 0;
@@ -24,16 +24,14 @@
                     margin-bottom: 3px;
                     padding-bottom: 0.5%;
                 }
-            }</style>
+            }
+        </style>
     </head>
-
     <body>
         <footer class="footer">
             <p>© Dayao | Esguerra | Guevarra | Gulifardo | Tuazon
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 FAP 2024</p>
         </footer>
-
     </body>
-
 </html>
